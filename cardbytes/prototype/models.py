@@ -2,8 +2,9 @@ from __future__ import unicode_literals
 
 from django.db import models
 
+
 class Merchant(models.Model):
-    name = models.CharField(max_length=200)
+    name = models.CharField(max_length=200, unique=True)
 
 class Offers(models.Model):
     merchant = models.ForeignKey(Merchant, on_delete=models.CASCADE)
@@ -14,7 +15,4 @@ class User(models.Model):
     name = models.CharField(max_length=200)
     acc_balance = models.FloatField()
     cashback_realized = models.FloatField()
-
-class Merchant(models.Model):
-    name = models.CharField(max_length=200, unique=True)
 

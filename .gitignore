@@ -1,1 +1,4 @@
 *.pyc
+*.swp
+cardbytes/db.sqlite3
+cardbytes/prototype/migrations
