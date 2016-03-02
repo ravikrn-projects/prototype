@@ -1,1 +1,1 @@
-# prototype
+## Prototype for Cardbytes project
