@@ -85,7 +85,7 @@ def transact(request):
 
 def update_user(user_id, cashback, amount):
     user = User.objects.get(id=user_id)
-    user.acc_balance = user.acc_balance - float(amount) + cashback
+    user.acc_balance = user.acc_balance - float(amount) + amount*cashback/100
     user.cashback_realized = amount * cashback / 100
     user.save()
 
@@ -98,11 +98,11 @@ def update_status(user_id, merchant_id, cashback):
 def update_vendor(cashback):
     vendor_commission_amt = vendor_commission*cashback
     vendor = Vendor.objects.all()[0]
-    vendor.revenue +=vendor_commission_amt
+    vendor.revenue += vendor_commission_amt*amount
     vendor.save()
 
 def update_bank(cashback, amount):
-    clm_commission = bank_commission_clm*vendor_commission*cashback
+    clm_commission = bank_commission_clm*vendor_commission*cashback*amount
     transaction_commission = bank_commission*amount
     bank = Bank.objects.all()[0]
     bank.revenue_with_clm += transaction_commission+clm_commission
