@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
-from prototype.models import Offers, Merchant, Vendor, Bank, User
+from prototype.models import Offer, Merchant, Vendor, Bank, User
 from config import vendor_commision, bank_commision
 
 def index(request):
@@ -9,7 +9,7 @@ def index(request):
 def generate_offers(request):
     params = request.GET
     try:
-        offers = Offers.objects.all().values('user_id', 'merchant_id', 'cashback', 'cashback_status')
+        offers = Offer.objects.all().values('user_id', 'merchant_id', 'cashback', 'cashback_status')
         offer_list = list(offers)
         offer_list_response = []
         for offer in offer_list:
@@ -83,8 +83,8 @@ def update_user(user_id, merchant_id, amount):
 
 def update_status(user_id, merchant_id):
     if get_cashback(user_id, merchant_id)>0
-        offer = Offers.objects.filter(user_id=user_id, merchant_id=merchant_id)
-        offer.cashback_status = 'used'
+        offer = Offer.objects.filter(user_id=user_id, merchant_id=merchant_id)
+        offer.cashback_status = True
     else:
         return 
 
@@ -107,7 +107,7 @@ def update_bank(user_id, merchant_id, amount):
 def get_cashback(user_id, merchant_id):
     cashback = 0
     try:
-        offer = Offers.objects.filter(user_id=user_id, merchant_id=merchant_id)
+        offer = Offer.objects.get(user_id=user_id, merchant_id=merchant_id)
         if len(offer)>0:
             cashback = offer.cashback
     except Exception as e:
@@ -119,7 +119,7 @@ def initialize(request):
         #delete previous data
         User.objects.all().delete()
         Merchant.objects.all().delete()
-        Offers.objects.all().delete()
+        Offer.objects.all().delete()
 
         #insert new data
         user_names = ['Ravi', 'Akash']
