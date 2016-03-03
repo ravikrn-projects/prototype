@@ -21,5 +21,5 @@ class Vendor(models.Model):
 	revenue = models.FloatField(default=0)
 
 class Bank(models.Model):
-	revenue = models.FloatField(default=0)
-	revenue_clm = models.FloatField(default=0) 
+	revenue_with_clm = models.FloatField(default=0)
+	revenue_without_clm = models.FloatField(default=0) 
