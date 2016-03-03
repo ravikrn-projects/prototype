@@ -14,15 +14,18 @@ def get_merchants(request):
     return JsonResponse(response)
 
 def user(request):
-    id = request.GET['id']
+    user_id = request.GET['user_id']
     try:
-        user = User.objects.filter(id=id).values('id', 'name', \
+        user = User.objects.filter(id=user_id).values('id', 'name', \
                 'acc_balance', 'cashback_realized')[0]
-        data = user.update({'message': 'NA'})
+        data = user.update({'message': get_message(user_id)})
         response = {'success': True, 'user': user}
     except Exception as e:
         response = {'success': False, 'error': str(e)}
     return JsonResponse(response)
+
+def get_message(user_id):
+    return 'NA'
 
 def transact(request):
     params = request.GET
