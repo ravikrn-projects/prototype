@@ -6,7 +6,8 @@ from prototype.models import Offer, Merchant, Vendor, Bank, User
 from config import vendor_commission, bank_commission, bank_commission_clm
 
 def index(request):
-    return HttpResponse("Hello, Welocome to Cardbytes Prototype.")
+    context = {'data': 'Hello'}
+    return render(request, 'index.html', context)
 
 def show_offers(request):
     params = request.GET
