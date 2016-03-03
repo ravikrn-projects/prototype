@@ -59,7 +59,13 @@ def user(request):
     return JsonResponse(response)
 
 def get_message(user_id):
-    return 'NA'
+    try:
+        offer = Offer.objects.get(user_id=user_id)
+        merchant = Merchant.objects.get(id=offer.merchant_id)
+        message = 'Get ' + str(offer.cashback) + '% cashback on transaction at ' + merchant.name
+    except Exception:
+        message = ''    
+    return message
 
 def transact(request):
     params = request.GET
