@@ -15,7 +15,7 @@ class Offer(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     merchant = models.ForeignKey(Merchant, on_delete=models.CASCADE)
     cashback = models.IntegerField(default=0)
-    cashback_used = models.CharField(max_length=50, default=False)
+    cashback_used = models.BooleanField(default=False)
 
 class Vendor(models.Model):
 	revenue = models.FloatField(default=0)

@@ -67,38 +67,34 @@ def transact(request):
     merchant_id = params['merchant_id']
     amount = params['amount']
     try:
-        update_user(user_id, merchant_id, amount)
-        update_vendor(user_id, merchant_id, amount)
-        update_bank(user_id, merchant_id, amount)
-        update_status(user_id, merchant_id)
+        cashback = get_cashback(user_id, merchant_id)
+        update_user(user_id, cashback, amount)
+        update_vendor(cashback)
+        update_bank(cashback, amount)
+        update_status(user_id, merchant_id, cashback)
         response = {'success': True}
     except Exception as e:
         response = {'success': False, 'error': str(e)}
     return JsonResponse(response)
 
-def update_user(user_id, merchant_id, amount):
+def update_user(user_id, cashback, amount):
     user = User.objects.get(id=user_id)
-    cashback = get_cashback(user_id, merchant_id, amount)
     user.acc_balance = user.acc_balance - float(amount) + cashback
     user.cashback_realized = cashback
     user.save()
 
-def update_status(user_id, merchant_id):
-    if get_cashback(user_id, merchant_id)>0
+def update_status(user_id, merchant_id, cashback):
+    if cashback>0
         offer = Offer.objects.filter(user_id=user_id, merchant_id=merchant_id)
         offer.cashback_status = True
-    else:
-        return 
 
-def update_vendor(user_id, merchant_id, amount):
-    cashback = get_cashback(user_id, merchant_id)
+def update_vendor(cashback):
     vendor_commission_amt = vendor_commission*cashback
     vendor = Vendor.objects.all()[0]
     vendor.revenue +=vendor_commission_amt
     vendor.save()
 
-def update_bank(user_id, merchant_id, amount):
-    cashback = get_cashback(user_id, merchant_id)
+def update_bank(cashback, amount):
     clm_commission = bank_commission_clm*vendor_commission*cashback
     transaction_commission = bank_commission*amount
     bank = Bank.objects.all()[0]
@@ -109,9 +105,8 @@ def update_bank(user_id, merchant_id, amount):
 def get_cashback(user_id, merchant_id):
     cashback = 0
     try:
-        offer = Offer.objects.get(user_id=user_id, merchant_id=merchant_id)
-        if len(offer)>0:
-            cashback = offer.cashback
+        offer = Offer.objects.get(user_id=user_id, merchant_id=merchant_id)    
+        cashback = offer.cashback
     except Exception as e:
         pass
     return cashback
