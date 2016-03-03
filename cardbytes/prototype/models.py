@@ -13,8 +13,8 @@ class Offers(models.Model):
 
 class User(models.Model):
     name = models.CharField(max_length=200)
-    acc_balance = models.FloatField(default=0)
-    cashback_realized = models.FloatField(default=0)
+    acc_balance = models.FloatField()
+    cashback_realized = models.FloatField()
 
 class Vendor(models.Model):
 	revenue = models.FloatField(default=0)
