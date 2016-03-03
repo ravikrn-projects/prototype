@@ -2,7 +2,6 @@ from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
 from prototype.models import Offers, Merchant, Vendor, Bank, User
 
-
 def index(request):
     return HttpResponse("Hello, Welocome to Cardbytes Prototype.")
 
@@ -37,29 +36,78 @@ def get_bank_revenue(request):
 		response = {'success': False, 'error': str(e)}
 	return JsonResponse(response)
 
-def create_merchant(request):
-    name = request.GET['name']
-    try:
-        merchant = Merchant(name = name)
-        merchant.save()
-        response = {'success': True}
-    except Exception as e:
-        response = {'success': False, 'error': str(e)}
-    return JsonResponse(response)
-
-def delete_merchant(request):
-    id = request.GET['id']
-    try:
-        merchant = Merchant(id = id).delete()
-        response = {'success': True}
-    except Exception as e:
-        response = {'success': False, 'error': str(e)}
-    return JsonResponse(response)
-
 def get_merchants(request):
     try:
         merchants = Merchant.objects.all().values('id', 'name')
         response = {'success': True, 'merchants': list(merchants)}
+    except Exception as e:
+        response = {'success': False, 'error': str(e)}
+    return JsonResponse(response)
+
+def user(request):
+    user_id = request.GET['user_id']
+    try:
+        user = User.objects.filter(id=user_id).values('id', 'name', \
+                'acc_balance', 'cashback_realized')[0]
+        data = user.update({'message': get_message(user_id)})
+        response = {'success': True, 'user': user}
+    except Exception as e:
+        response = {'success': False, 'error': str(e)}
+    return JsonResponse(response)
+
+def get_message(user_id):
+    return 'NA'
+
+def transact(request):
+    params = request.GET
+    user_id = params['user_id']
+    merchant_id = params['merchant_id']
+    amount = params['amount']
+    try:
+        update_user(user_id, merchant_id, amount)
+        update_vendor(user_id, merchant_id, amount)
+        update_bank(user_id, merchant_id, amount)
+        response = {'success': True}
+    except Exception as e:
+        response = {'success': False, 'error': str(e)}
+    return JsonResponse(response)
+
+def update_user(user_id, merchant_id, amount):
+    user = User.objects.get(id=user_id)
+    cashback = get_cashback(user_id, merchant_id, amount)
+    user.acc_balance = user.acc_balance - float(amount) + cashback
+    user.cashback_realized = cashback
+    user.save()
+
+def get_cashback(user_id, merchant_id, amount):
+    return 0
+
+def update_vendor(user_id, merchant_id, amount):
+    pass
+
+def update_bank(user_id, merchant_id, amount):
+    pass
+
+def initialize(request):
+    try:
+        # delete previous data
+        User.objects.all().delete()
+        Merchant.objects.all().delete()
+        Offers.objects.all().delete()
+
+        #insert new data
+        user_names = ['Ravi', 'Akash']
+        acc_balance = 10000
+        for user_name in user_names:
+            user = User(name=user_name, acc_balance=acc_balance, cashback_realized=0)
+            user.save()
+
+        merchant_names = ['McDonalds', 'KFC', 'PizzaHut', 'Dominos']
+        for merchant_name in merchant_names:
+            merchant = Merchant(name=merchant_name)
+            merchant.save()
+
+        response = {'success': True}
     except Exception as e:
         response = {'success': False, 'error': str(e)}
     return JsonResponse(response)
