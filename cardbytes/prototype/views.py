@@ -40,8 +40,9 @@ def transact(request):
 
 def update_user(user_id, merchant_id, amount):
     user = User.objects.get(id=user_id)
-    user.acc_balance -= float(amount)
-    user.cashback_realized = get_cashback(user_id, merchant_id, amount)
+    cashback = get_cashback(user_id, merchant_id, amount)
+    user.acc_balance = user.acc_balance - float(amount) + cashback
+    user.cashback_realized = cashback
     user.save()
 
 def get_cashback(user_id, merchant_id, amount):
