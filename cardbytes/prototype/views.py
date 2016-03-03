@@ -8,7 +8,7 @@ from config import vendor_commission, bank_commission, bank_commission_clm
 def index(request):
     return HttpResponse("Hello, Welocome to Cardbytes Prototype.")
 
-def generate_offers(request):
+def show_offers(request):
     params = request.GET
     try:
         offers = Offer.objects.all().values('user_id', 'merchant_id', 'cashback', 'cashback_used')
@@ -86,7 +86,7 @@ def transact(request):
 def update_user(user_id, cashback, amount):
     user = User.objects.get(id=user_id)
     user.acc_balance = user.acc_balance - float(amount) + cashback
-    user.cashback_realized = cashback
+    user.cashback_realized = amount * cashback / 100
     user.save()
 
 def update_status(user_id, merchant_id, cashback):
@@ -129,7 +129,6 @@ def initialize(request):
         # insert new data
         initialize_users()
         initialize_merchants()
-        initialize_offers()
         initialize_vendor()
         initialize_bank()
 
@@ -151,15 +150,21 @@ def initialize_merchants():
         merchant = Merchant(name=merchant_name)
         merchant.save()
         
-def initialize_offers():
-    users = User.objects.all()
-    merchants = Merchant.objects.all()
-    cashbacks = [5, 10, 15, 20]
-    for user in users:
-        merchant = random.choice(merchants)
-        cashback = random.choice(cashbacks)
-        offer = Offer(user=user, merchant=merchant, cashback=cashback, cashback_used=False)
-        offer.save()
+def generate_offers(request):
+    Offer.objects.all().delete()
+    try:
+        users = User.objects.all()
+        merchants = Merchant.objects.all()
+        cashbacks = [5, 10, 15, 20]
+        for user in users:
+            merchant = random.choice(merchants)
+            cashback = random.choice(cashbacks)
+            offer = Offer(user=user, merchant=merchant, cashback=cashback, cashback_used=False)
+            offer.save()
+        response = {'success': True}
+    except Exception as e:
+        response = {'success': False, 'error': str(e)}
+    return JsonResponse(response)
 
 def initialize_vendor():
     vendor = Vendor()
