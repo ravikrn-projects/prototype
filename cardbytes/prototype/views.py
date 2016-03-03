@@ -87,6 +87,7 @@ def update_status(user_id, merchant_id, cashback):
     if cashback>0
         offer = Offer.objects.filter(user_id=user_id, merchant_id=merchant_id)
         offer.cashback_status = True
+        offer.save()
 
 def update_vendor(cashback):
     vendor_commission_amt = vendor_commission*cashback
