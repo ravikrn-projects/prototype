@@ -65,7 +65,7 @@ def transact(request):
     params = request.GET
     user_id = params['user_id']
     merchant_id = params['merchant_id']
-    amount = params['amount']
+    amount = float(params['amount'])
     try:
         cashback = get_cashback(user_id, merchant_id)
         update_user(user_id, cashback, amount)
@@ -118,10 +118,14 @@ def initialize(request):
         User.objects.all().delete()
         Merchant.objects.all().delete()
         Offer.objects.all().delete()
+        Vendor.objects.all().delete()
+        Bank.objects.all().delete()
         # insert new data
         initialize_users()
         initialize_merchants()
         initialize_offers()
+        initialize_vendor()
+        initialize_bank()
 
         response = {'success': True}
     except Exception as e:
@@ -151,3 +155,10 @@ def initialize_offers():
         offer = Offer(user=user, merchant=merchant, cashback=cashback, cashback_used=False)
         offer.save()
 
+def initialize_vendor():
+    vendor = Vendor()
+    vendor.save()
+
+def initialize_bank():
+    bank = Bank()
+    bank.save()
