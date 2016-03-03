@@ -8,7 +8,7 @@ from config import vendor_commission, bank_commission, bank_commission_clm
 def index(request):
     return HttpResponse("Hello, Welocome to Cardbytes Prototype.")
 
-def generate_offers(request):
+def show_offers(request):
     params = request.GET
     try:
         offers = Offer.objects.all().values('user_id', 'merchant_id', 'cashback', 'cashback_used')
@@ -59,7 +59,13 @@ def user(request):
     return JsonResponse(response)
 
 def get_message(user_id):
-    return 'NA'
+    try:
+        offer = Offer.objects.get(user_id=user_id)
+        merchant = Merchant.objects.get(id=offer.merchant_id)
+        message = 'Get ' + str(offer.cashback) + '% cashback on transaction at ' + merchant.name
+    except Exception:
+        message = ''    
+    return message
 
 def transact(request):
     params = request.GET
@@ -79,8 +85,8 @@ def transact(request):
 
 def update_user(user_id, cashback, amount):
     user = User.objects.get(id=user_id)
-    user.acc_balance = user.acc_balance - float(amount) + cashback
-    user.cashback_realized = cashback
+    user.acc_balance = user.acc_balance - float(amount) + amount*cashback/100
+    user.cashback_realized = amount * cashback / 100
     user.save()
 
 def update_status(user_id, merchant_id, cashback):
@@ -92,11 +98,11 @@ def update_status(user_id, merchant_id, cashback):
 def update_vendor(cashback):
     vendor_commission_amt = vendor_commission*cashback
     vendor = Vendor.objects.all()[0]
-    vendor.revenue +=vendor_commission_amt
+    vendor.revenue += vendor_commission_amt*amount
     vendor.save()
 
 def update_bank(cashback, amount):
-    clm_commission = bank_commission_clm*vendor_commission*cashback
+    clm_commission = bank_commission_clm*vendor_commission*cashback*amount
     transaction_commission = bank_commission*amount
     bank = Bank.objects.all()[0]
     bank.revenue_with_clm += transaction_commission+clm_commission
@@ -123,7 +129,6 @@ def initialize(request):
         # insert new data
         initialize_users()
         initialize_merchants()
-        initialize_offers()
         initialize_vendor()
         initialize_bank()
 
@@ -145,15 +150,21 @@ def initialize_merchants():
         merchant = Merchant(name=merchant_name)
         merchant.save()
         
-def initialize_offers():
-    users = User.objects.all()
-    merchants = Merchant.objects.all()
-    cashbacks = [5, 10, 15, 20]
-    for user in users:
-        merchant = random.choice(merchants)
-        cashback = random.choice(cashbacks)
-        offer = Offer(user=user, merchant=merchant, cashback=cashback, cashback_used=False)
-        offer.save()
+def generate_offers(request):
+    Offer.objects.all().delete()
+    try:
+        users = User.objects.all()
+        merchants = Merchant.objects.all()
+        cashbacks = [5, 10, 15, 20]
+        for user in users:
+            merchant = random.choice(merchants)
+            cashback = random.choice(cashbacks)
+            offer = Offer(user=user, merchant=merchant, cashback=cashback, cashback_used=False)
+            offer.save()
+        response = {'success': True}
+    except Exception as e:
+        response = {'success': False, 'error': str(e)}
+    return JsonResponse(response)
 
 def initialize_vendor():
     vendor = Vendor()
