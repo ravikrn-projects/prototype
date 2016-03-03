@@ -6,7 +6,8 @@ from prototype.models import Offer, Merchant, Vendor, Bank, User
 from config import vendor_commission, bank_commission, bank_commission_clm
 
 def index(request):
-    return HttpResponse("Hello, Welocome to Cardbytes Prototype.")
+    context = {'data': 'Hello'}
+    return render(request, 'index.html', context)
 
 def show_offers(request):
     params = request.GET
@@ -85,8 +86,8 @@ def transact(request):
 
 def update_user(user_id, cashback, amount):
     user = User.objects.get(id=user_id)
-    user.acc_balance = user.acc_balance - float(amount) + amount*cashback/100
-    user.cashback_realized = amount * cashback / 100
+    user.acc_balance = user.acc_balance - float(amount) + amount*cashback
+    user.cashback_realized = amount * cashback
     user.save()
 
 def update_status(user_id, merchant_id, cashback):
@@ -155,7 +156,7 @@ def generate_offers(request):
     try:
         users = User.objects.all()
         merchants = Merchant.objects.all()
-        cashbacks = [5, 10, 15, 20]
+        cashbacks = [0.05, 0.1, 0.15, 0.2]
         for user in users:
             merchant = random.choice(merchants)
             cashback = random.choice(cashbacks)
