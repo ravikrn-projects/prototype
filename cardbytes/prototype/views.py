@@ -11,7 +11,7 @@ def index(request):
 def generate_offers(request):
     params = request.GET
     try:
-        offers = Offer.objects.all().values('user_id', 'merchant_id', 'cashback', 'cashback_status')
+        offers = Offer.objects.all().values('user_id', 'merchant_id', 'cashback', 'cashback_used')
         offer_list = list(offers)
         offer_list_response = []
         for offer in offer_list:
@@ -86,7 +86,7 @@ def update_user(user_id, cashback, amount):
 def update_status(user_id, merchant_id, cashback):
     if cashback>0:
         offer = Offer.objects.get(user_id=user_id, merchant_id=merchant_id)
-        offer.cashback_status = True
+        offer.cashback_used = True
         offer.save()
 
 def update_vendor(cashback):
@@ -148,6 +148,6 @@ def initialize_offers():
     for user in users:
         merchant = random.choice(merchants)
         cashback = random.choice(cashbacks)
-        offer = Offer(user=user, merchant=merchant, cashback=cashback, cashback_status='Unused')
+        offer = Offer(user=user, merchant=merchant, cashback=cashback, cashback_used=False)
         offer.save()
 
