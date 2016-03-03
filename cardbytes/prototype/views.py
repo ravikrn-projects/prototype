@@ -9,15 +9,13 @@ def index(request):
 def generate_offers(request):
 	params = request.GET
 	try:
-		offers = Offers.objects.all()
-		offer_list = []
-		for offer in offers:
-			merchant_id = offer.merchant_id
-			merchant_name = Merchant.objects.filter(id = merchant_id)[0].name
-			offer_dict = {'id': offer.id, 'merchant': merchant_name, 'cashback': offer.cashback, 
-				'cashback_status': offer.cashback_status}
-			offer_list.append(offer_dict)
-		response = {'success': True, 'offers': offer_list}
+		offers = Offers.objects.all().values('user_id', 'merchant_id', 'cashback', 'cashback_status')
+		offer_list = list(offers)
+		offer_list_response = []
+		for offer in offer_list:
+			offer['merchant'] = Merchant.objects.get(id = offer['merchant_id']).name
+			offer_list_response.append(offer)
+		response = {'success': True, 'offers': offer_list_response}
 	except Exception as e:
 		response = {'success': False, 'error': str(e)}
 	return JsonResponse(response)

@@ -38,7 +38,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'django.contrib.sites'
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -116,7 +115,6 @@ USE_L10N = True
 
 USE_TZ = True
 
-SITE_ID = 1
 
 
 # Static files (CSS, JavaScript, Images)
