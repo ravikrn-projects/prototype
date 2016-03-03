@@ -68,6 +68,7 @@ def transact(request):
         update_user(user_id, merchant_id, amount)
         update_vendor(user_id, merchant_id, amount)
         update_bank(user_id, merchant_id, amount)
+        update_status(user_id, merchant_id)
         response = {'success': True}
     except Exception as e:
         response = {'success': False, 'error': str(e)}
@@ -80,20 +81,42 @@ def update_user(user_id, merchant_id, amount):
     user.cashback_realized = cashback
     user.save()
 
-def get_cashback(user_id, merchant_id, amount):
-    return 0
+def update_status(user_id, merchant_id):
+    if get_cashback(user_id, merchant_id)>0
+        offer = Offers.objects.filter(user_id=user_id, merchant_id=merchant_id)
+        offer.cashback_status = 'used'
+    else:
+        return 
 
 def update_vendor(user_id, merchant_id, amount):
-    vendor_commision_amt = vendor_commision*amount
-    pass
-
+    cashback = get_cashback(user_id, merchant_id)
+    vendor_commision_amt = vendor_commision*cashback
+    vendor = Vendor.objects.all()[0]
+    vendor.revenue +=vendor_commision_amt
+    vendor.save()
 
 def update_bank(user_id, merchant_id, amount):
-    pass
+    cashback = get_cashback(user_id, merchant_id)
+    clm_commision = bank_clm_commision*vendor_commision*cashback
+    transaction_commision = bank_commision*amount
+    bank = Bank.objects.all()[0]
+    bank.revenue_with_clm += transaction_commision+clm_commision
+    bank.revenue_without_clm += transaction_commision
+    bank.save()
+
+def get_cashback(user_id, merchant_id):
+    cashback = 0
+    try:
+        offer = Offers.objects.filter(user_id=user_id, merchant_id=merchant_id)
+        if len(offer)>0:
+            cashback = offer.cashback
+    except Exception as e:
+        pass
+    return cashback
 
 def initialize(request):
     try:
-        # delete previous data
+        #delete previous data
         User.objects.all().delete()
         Merchant.objects.all().delete()
         Offers.objects.all().delete()

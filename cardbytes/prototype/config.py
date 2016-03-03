@@ -1,2 +1,3 @@
-vendor_commission = 0.05
-bank_commisision = 0.01
+vendor_commision = 0.1
+bank_commision = 0.02
+bank_commision_clm = 0.05
