@@ -1,7 +1,9 @@
+import random
+
 from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
 from prototype.models import Offer, Merchant, Vendor, Bank, User
-from config import vendor_commision, bank_commision
+from config import vendor_commission, bank_commission, bank_commission_clm
 
 def index(request):
     return HttpResponse("Hello, Welocome to Cardbytes Prototype.")
@@ -90,18 +92,18 @@ def update_status(user_id, merchant_id):
 
 def update_vendor(user_id, merchant_id, amount):
     cashback = get_cashback(user_id, merchant_id)
-    vendor_commision_amt = vendor_commision*cashback
+    vendor_commission_amt = vendor_commission*cashback
     vendor = Vendor.objects.all()[0]
-    vendor.revenue +=vendor_commision_amt
+    vendor.revenue +=vendor_commission_amt
     vendor.save()
 
 def update_bank(user_id, merchant_id, amount):
     cashback = get_cashback(user_id, merchant_id)
-    clm_commision = bank_clm_commision*vendor_commision*cashback
-    transaction_commision = bank_commision*amount
+    clm_commission = bank_commission_clm*vendor_commission*cashback
+    transaction_commission = bank_commission*amount
     bank = Bank.objects.all()[0]
-    bank.revenue_with_clm += transaction_commision+clm_commision
-    bank.revenue_without_clm += transaction_commision
+    bank.revenue_with_clm += transaction_commission+clm_commission
+    bank.revenue_without_clm += transaction_commission
     bank.save()
 
 def get_cashback(user_id, merchant_id):
@@ -120,20 +122,36 @@ def initialize(request):
         User.objects.all().delete()
         Merchant.objects.all().delete()
         Offer.objects.all().delete()
-
-        #insert new data
-        user_names = ['Ravi', 'Akash']
-        acc_balance = 10000
-        for user_name in user_names:
-            user = User(name=user_name, acc_balance=acc_balance, cashback_realized=0)
-            user.save()
-
-        merchant_names = ['McDonalds', 'KFC', 'PizzaHut', 'Dominos']
-        for merchant_name in merchant_names:
-            merchant = Merchant(name=merchant_name)
-            merchant.save()
+        # insert new data
+        initialize_users()
+        initialize_merchants()
+        initialize_offers()
 
         response = {'success': True}
     except Exception as e:
         response = {'success': False, 'error': str(e)}
     return JsonResponse(response)
+
+def initialize_users():
+    user_names = ['A', 'B', 'C', 'D']
+    acc_balance = 10000
+    for user_name in user_names:
+        user = User(name=user_name, acc_balance=acc_balance, cashback_realized=0)
+        user.save()
+
+def initialize_merchants():
+    merchant_names = ['McDonalds', 'KFC', 'PizzaHut', 'Dominos']
+    for merchant_name in merchant_names:
+        merchant = Merchant(name=merchant_name)
+        merchant.save()
+        
+def initialize_offers():
+    users = User.objects.all()
+    merchants = Merchant.objects.all()
+    cashbacks = [5, 10, 15, 20]
+    for user in users:
+        merchant = random.choice(merchants)
+        cashback = random.choice(cashbacks)
+        offer = Offer(user=user, merchant=merchant, cashback=cashback, cashback_status='Unused')
+        offer.save()
+
