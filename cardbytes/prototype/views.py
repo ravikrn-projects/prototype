@@ -84,7 +84,7 @@ def update_user(user_id, cashback, amount):
     user.save()
 
 def update_status(user_id, merchant_id, cashback):
-    if cashback>0
+    if cashback>0:
         offer = Offer.objects.get(user_id=user_id, merchant_id=merchant_id)
         offer.cashback_status = True
         offer.save()
