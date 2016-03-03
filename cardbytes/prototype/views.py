@@ -3,7 +3,7 @@ import random
 from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
 from prototype.models import Offer, Merchant, Vendor, Bank, User
-from config import vendor_commission, bank_commission
+from config import vendor_commission, bank_commission, bank_commission_clm
 
 def index(request):
     return HttpResponse("Hello, Welocome to Cardbytes Prototype.")
@@ -67,39 +67,57 @@ def transact(request):
     merchant_id = params['merchant_id']
     amount = params['amount']
     try:
-        update_user(user_id, merchant_id, amount)
-        update_vendor(user_id, merchant_id, amount)
-        update_bank(user_id, merchant_id, amount)
+        cashback = get_cashback(user_id, merchant_id)
+        update_user(user_id, cashback, amount)
+        update_vendor(cashback)
+        update_bank(cashback, amount)
+        update_status(user_id, merchant_id, cashback)
         response = {'success': True}
     except Exception as e:
         response = {'success': False, 'error': str(e)}
     return JsonResponse(response)
 
-def update_user(user_id, merchant_id, amount):
+def update_user(user_id, cashback, amount):
     user = User.objects.get(id=user_id)
-    cashback = get_cashback(user_id, merchant_id, amount)
     user.acc_balance = user.acc_balance - float(amount) + cashback
     user.cashback_realized = cashback
     user.save()
 
-def get_cashback(user_id, merchant_id, amount):
-    return 0
+def update_status(user_id, merchant_id, cashback):
+    if cashback>0
+        offer = Offer.objects.get(user_id=user_id, merchant_id=merchant_id)
+        offer.cashback_status = True
+        offer.save()
 
-def update_vendor(user_id, merchant_id, amount):
-    vendor_commision_amt = vendor_commision*amount
-    pass
+def update_vendor(cashback):
+    vendor_commission_amt = vendor_commission*cashback
+    vendor = Vendor.objects.all()[0]
+    vendor.revenue +=vendor_commission_amt
+    vendor.save()
 
+def update_bank(cashback, amount):
+    clm_commission = bank_commission_clm*vendor_commission*cashback
+    transaction_commission = bank_commission*amount
+    bank = Bank.objects.all()[0]
+    bank.revenue_with_clm += transaction_commission+clm_commission
+    bank.revenue_without_clm += transaction_commission
+    bank.save()
 
-def update_bank(user_id, merchant_id, amount):
-    pass
+def get_cashback(user_id, merchant_id):
+    cashback = 0
+    try:
+        offer = Offer.objects.get(user_id=user_id, merchant_id=merchant_id)    
+        cashback = offer.cashback
+    except Exception as e:
+        pass
+    return cashback
 
 def initialize(request):
     try:
-        # delete previous data
+        #delete previous data
         User.objects.all().delete()
         Merchant.objects.all().delete()
         Offer.objects.all().delete()
-
         # insert new data
         initialize_users()
         initialize_merchants()
