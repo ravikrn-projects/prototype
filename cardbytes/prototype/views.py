@@ -6,7 +6,12 @@ from prototype.models import Offer, Merchant, Vendor, Bank, User
 from config import vendor_commission, bank_commission, bank_commission_clm
 
 def index(request):
-    return HttpResponse("Hello, Welocome to Cardbytes Prototype.")
+    context = {'data': 'Hello'}
+    return render(request, 'index.html', context)
+
+def customer(request, user_id):
+    context = {'user_id': user_id}
+    return render(request, 'customer.html', context)
 
 def show_offers(request):
     params = request.GET
@@ -45,7 +50,9 @@ def get_merchants(request):
         response = {'success': True, 'merchants': list(merchants)}
     except Exception as e:
         response = {'success': False, 'error': str(e)}
-    return JsonResponse(response)
+    res = JsonResponse(response)
+    res["Access-Control-Allow-Origin"] = "*"
+    return res
 
 def user(request):
     user_id = request.GET['user_id']
@@ -56,13 +63,15 @@ def user(request):
         response = {'success': True, 'user': user}
     except Exception as e:
         response = {'success': False, 'error': str(e)}
-    return JsonResponse(response)
+    res = JsonResponse(response)
+    res["Access-Control-Allow-Origin"] = "*"
+    return res
 
 def get_message(user_id):
     try:
         offer = Offer.objects.get(user_id=user_id)
         merchant = Merchant.objects.get(id=offer.merchant_id)
-        message = 'Get ' + str(offer.cashback) + '% cashback on transaction at ' + merchant.name
+        message = 'Get ' + str(offer.cashback * 100) + '% cashback on transaction at ' + merchant.name
     except Exception:
         message = ''    
     return message
@@ -75,13 +84,15 @@ def transact(request):
     try:
         cashback = get_cashback(user_id, merchant_id)
         update_user(user_id, cashback, amount)
-        update_vendor(cashback)
+        update_vendor(cashback, amount)
         update_bank(cashback, amount)
         update_status(user_id, merchant_id, cashback)
         response = {'success': True}
     except Exception as e:
         response = {'success': False, 'error': str(e)}
-    return JsonResponse(response)
+    res = JsonResponse(response)
+    res["Access-Control-Allow-Origin"] = "*"
+    return res
 
 def update_user(user_id, cashback, amount):
     user = User.objects.get(id=user_id)
@@ -95,7 +106,7 @@ def update_status(user_id, merchant_id, cashback):
         offer.cashback_status = True
         offer.save()
 
-def update_vendor(cashback):
+def update_vendor(cashback, amount):
     vendor_commission_amt = vendor_commission*cashback
     vendor = Vendor.objects.all()[0]
     vendor.revenue += vendor_commission_amt*amount
@@ -151,8 +162,8 @@ def initialize_merchants():
         merchant.save()
         
 def generate_offers(request):
-    Offer.objects.all().delete()
     try:
+        Offer.objects.all().delete()
         users = User.objects.all()
         merchants = Merchant.objects.all()
         cashbacks = [0.05, 0.1, 0.15, 0.2]
