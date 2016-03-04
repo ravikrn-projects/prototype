@@ -9,6 +9,10 @@ def index(request):
     context = {'data': 'Hello'}
     return render(request, 'index.html', context)
 
+def customer(request, user_id):
+    context = {}
+    return render(request, 'customer.html', context)
+
 def show_offers(request):
     params = request.GET
     try:
