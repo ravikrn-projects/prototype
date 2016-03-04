@@ -11,8 +11,58 @@
 
     <script>
         function buy(){
-            console.log(document.getElementById("amount").value);
+            console.log($("#amount").val());
+            $.ajax(
+                    {
+                        url: "http://127.0.0.1:8000/cardbytes/transact", 
+                        data: {
+                                user_id: 42,
+                                amount: 1000,
+                                merchant_id: 44
+                        },
+                        success: function(result){
+                            console.log(result);
+                        }
+                    }
+            );
         }
+        
+        function getUserData(){
+            $.ajax(
+                    {
+                        url: "http://127.0.0.1:8000/cardbytes/user?user_id="+{{user_id}}, 
+                        success: function(result){
+                            console.log(result.user);
+                            $("#textarea1").val(result.user.message);
+                            $("#acc_balance").html("Account Balance: "+result.user.acc_balance);
+                            $("#cashback").html("Cashback: "+result.user.cashback_realized);
+                        }
+                    }
+            );
+        }       
+
+        function getMerchantData(){
+            $.ajax(
+                    {
+                        url: "http://127.0.0.1:8000/cardbytes/get_merchants", 
+                        success: function(result){
+                            console.log(result);
+                            var list_items = "";
+                            for(var i=0;i<result.merchants.length;i++)
+                                list_items += "<li><a href='#!'>"+ result.merchants[i].name +"</a></li>";
+                            $("#dropdown1").html(list_items);
+                            $("#merchant").html(result.merchants[0].name);
+                        }
+                    }
+                );
+        }
+        
+        function initialize(){
+            getUserData();
+            getMerchantData();
+        }
+
+        $(document).ready(initialize());
     </script>
 
 </head>
@@ -25,25 +75,24 @@
             <div class="col s12">
                 <textarea id="textarea1" class="materialize-textarea" name=message></textarea>
             </div>
-            <div class="col s4">
-                <a id="merchants" class='dropdown-button btn' href='#' data-activates='dropdown1'> Select Merchant </a>
-                <ul id='dropdown1' class='dropdown-content'>
-                    <li><a href="#!">one</a></li>
-                    <li><a href="#!">two</a></li>
-                    <li><a href="#!">three</a></li>
-                </ul>
+            <div class="col s3">
+                <a id="merchants" class='dropdown-button btn' href='#' data-activates='dropdown1' > Select Merchant </a>
+                <ul id='dropdown1' class='dropdown-content'></ul>
             </div>
-            <div class="col s4">
+            <div class="col s3">
+                <div id="merchant"></div>
+            </div>
+            <div class="col s3">
                 <input placeholder="Amount" id="amount" type="number" class="validate">
             </div>
-            <div class="col s4">
+            <div class="col s3">
                 <a class="waves-effect waves-light btn" id="buy" onClick="buy()">Buy</a>
             </div>
             <div class="col s6">
               <div class="card blue-grey accent-3">
                 <div class="card-content white-text">
                   <span class="card-title">Account Balance</span>
-                  <p>Account Balance: </p>
+                  <p id="acc_balance"></p>
                 </div>
               </div>
             </div>
@@ -51,7 +100,7 @@
               <div class="card blue-grey accent-3">
                 <div class="card-content white-text">
                   <span class="card-title">Cashback</span>
-                  <p>Cashback: </p>
+                  <p id="cashback"></p>
                 </div>
               </div>
             </div>
