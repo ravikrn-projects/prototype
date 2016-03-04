@@ -9,62 +9,8 @@
     <script type="text/javascript" src="{% static "js/jquery-2.2.1.min.js" %}"></script>           
     <script type="text/javascript" src="{% static "js/materialize.min.js" %}"></script>
 
-    <script>
-        function buy(){
-            console.log($("#amount").val());
-            $.ajax(
-                    {
-                        url: "http://127.0.0.1:8000/cardbytes/transact", 
-                        data: {
-                                user_id: 42,
-                                amount: 1000,
-                                merchant_id: 44
-                        },
-                        success: function(result){
-                            console.log(result);
-                        }
-                    }
-            );
-        }
-        
-        function getUserData(){
-            $.ajax(
-                    {
-                        url: "http://127.0.0.1:8000/cardbytes/user?user_id="+{{user_id}}, 
-                        success: function(result){
-                            console.log(result.user);
-                            $("#textarea1").val(result.user.message);
-                            $("#acc_balance").html("Account Balance: "+result.user.acc_balance);
-                            $("#cashback").html("Cashback: "+result.user.cashback_realized);
-                        }
-                    }
-            );
-        }       
-
-        function getMerchantData(){
-            $.ajax(
-                    {
-                        url: "http://127.0.0.1:8000/cardbytes/get_merchants", 
-                        success: function(result){
-                            console.log(result);
-                            var list_items = "";
-                            for(var i=0;i<result.merchants.length;i++)
-                                list_items += "<li><a href='#!'>"+ result.merchants[i].name +"</a></li>";
-                            $("#dropdown1").html(list_items);
-                            $("#merchant").html(result.merchants[0].name);
-                        }
-                    }
-                );
-        }
-        
-        function initialize(){
-            getUserData();
-            getMerchantData();
-        }
-
-        $(document).ready(initialize());
-    </script>
-
+    <script type="text/javascript"> var user_id = {{user_id}}</script>
+    <script type="text/javascript" src="{% static "js/customer.js" %}"></script>
 </head>
 <body>
     <div class="container">
@@ -73,7 +19,7 @@
                 <h5>Message</h5>
             </div>
             <div class="col s12">
-                <textarea id="textarea1" class="materialize-textarea" name=message></textarea>
+                <textarea id="textarea1" class="materialize-textarea" name=message readonly></textarea>
             </div>
             <div class="col s3">
                 <a id="merchants" class='dropdown-button btn' href='#' data-activates='dropdown1' > Select Merchant </a>
