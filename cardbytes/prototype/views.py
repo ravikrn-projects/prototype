@@ -9,6 +9,10 @@ def index(request):
     context = {'data': 'Hello'}
     return render(request, 'index.html', context)
 
+def customer(request, user_id):
+    context = {'user_id': user_id}
+    return render(request, 'customer.html', context)
+
 def show_offers(request):
     params = request.GET
     try:
@@ -46,7 +50,9 @@ def get_merchants(request):
         response = {'success': True, 'merchants': list(merchants)}
     except Exception as e:
         response = {'success': False, 'error': str(e)}
-    return JsonResponse(response)
+    res = JsonResponse(response)
+    res["Access-Control-Allow-Origin"] = "*"
+    return res
 
 def user(request):
     user_id = request.GET['user_id']
@@ -57,13 +63,15 @@ def user(request):
         response = {'success': True, 'user': user}
     except Exception as e:
         response = {'success': False, 'error': str(e)}
-    return JsonResponse(response)
+    res = JsonResponse(response)
+    res["Access-Control-Allow-Origin"] = "*"
+    return res
 
 def get_message(user_id):
     try:
         offer = Offer.objects.get(user_id=user_id)
         merchant = Merchant.objects.get(id=offer.merchant_id)
-        message = 'Get ' + str(offer.cashback) + '% cashback on transaction at ' + merchant.name
+        message = 'Get ' + str(offer.cashback * 100) + '% cashback on transaction at ' + merchant.name
     except Exception:
         message = ''    
     return message
@@ -82,7 +90,9 @@ def transact(request):
         response = {'success': True}
     except Exception as e:
         response = {'success': False, 'error': str(e)}
-    return JsonResponse(response)
+    res = JsonResponse(response)
+    res["Access-Control-Allow-Origin"] = "*"
+    return res
 
 def update_user(user_id, cashback, amount):
     user = User.objects.get(id=user_id)
@@ -152,8 +162,8 @@ def initialize_merchants():
         merchant.save()
         
 def generate_offers(request):
-    Offer.objects.all().delete()
     try:
+        Offer.objects.all().delete()
         users = User.objects.all()
         merchants = Merchant.objects.all()
         cashbacks = [0.05, 0.1, 0.15, 0.2]
