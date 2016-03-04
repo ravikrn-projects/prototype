@@ -76,7 +76,7 @@ def transact(request):
     try:
         cashback = get_cashback(user_id, merchant_id)
         update_user(user_id, cashback, amount)
-        update_vendor(cashback)
+        update_vendor(cashback, amount)
         update_bank(cashback, amount)
         update_status(user_id, merchant_id, cashback)
         response = {'success': True}
@@ -96,7 +96,7 @@ def update_status(user_id, merchant_id, cashback):
         offer.cashback_used = True
         offer.save()
 
-def update_vendor(cashback):
+def update_vendor(cashback, amount):
     vendor_commission_amt = vendor_commission*cashback
     vendor = Vendor.objects.all()[0]
     vendor.revenue += vendor_commission_amt*amount
