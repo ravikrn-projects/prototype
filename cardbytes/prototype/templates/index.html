@@ -13,21 +13,9 @@
 
 <div id ='card_panel' class="row">
     <div class="col s12">
-    
-    <h4>CardBytes CLM prototype </h4>
-  <div>
-      <a id ="generate_offers" class="waves-effect waves-light btn">Generate offers</a>
-      <script>
-          $('#generate_offers').on('click',  function(){
-            $.ajax({url: "http://localhost:8000/cardbytes/generate_offers?", 
-              success: function(result){
-            console.log('success');
-            create_table();
-            }});
-          });
-          </script>
+        <h4>CardBytes CLM prototype </h4>
     </div>
-    </div>
+
     
       <div class="col s6">
       <div class="card blue-grey accent-3">
@@ -83,6 +71,20 @@
       </div>
     </div>
 
+    <div class="col s12">
+  <div>
+      <a id ="generate_offers" class="waves-effect waves-light btn">Generate offers</a>
+      <script>
+          $('#generate_offers').on('click',  function(){
+            $.ajax({url: "http://localhost:8000/cardbytes/generate_offers?", 
+              success: function(result){
+            console.log('success');
+            create_table();
+            }});
+          });
+          </script>
+    </div>
+    </div>
     <div id="table" class="col s12">
         </div>
 
