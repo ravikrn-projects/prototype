@@ -13,6 +13,10 @@ def customer(request, user_id):
     context = {'user_id': user_id}
     return render(request, 'customer.html', context)
 
+def merchant(request, merchant_id):
+    context = {'merchant_id': merchant_id}
+    return render(request, 'merchant.html', context)
+
 def show_offers(request):
     params = request.GET
     try:
