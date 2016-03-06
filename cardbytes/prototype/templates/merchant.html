@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Merchant</title>
+        {% load staticfiles %}
+
+        <link rel="stylesheet" href="{% static "css/materialize.min.css" %}">
+        <link rel="stylesheet" href="{% static "css/merchant.css" %}">
+
+        <script type="text/javascript" src="{% static "js/jquery-2.2.1.min.js" %}"></script>           
+        <script type="text/javascript" src="{% static "js/materialize.min.js" %}"></script>
+
+        <script type="text/javascript"> var merchant_id = {{merchant_id}}</script>
+        <script type="text/javascript" src="{% static "js/merchant.js" %}"></script>
+    </head>
+    <body>
+
+    <div class="container">
+        <div class="row">
+            <div class="col s12">
+                <h5>Merchant</h5>
+            </div>
+            <div class="col s12">
+                <div class="divider"></div>
+                <br/>
+            </div>
+            <div class="col s3">
+                <a class='dropdown-button btn' href='#' data-activates='goal_dropdown' > Goal </a>
+                <ul id='goal_dropdown' class='dropdown-content'></ul>
+            </div>
+            <div class="col s9">
+                <div id="goal" class="selected_item"></div>
+            </div>
+            <div class="col s12">
+                <br/>
+            </div>
+            <div class="col s3">
+                <a class='dropdown-button btn' href='#' data-activates='tag_dropdown' > Customer Type </a>
+                <ul id='tag_dropdown' class='dropdown-content'></ul>
+            </div>
+            <div class="col s9">
+                <div id="tag" class="selected_item"></div>
+            </div>
+            <div class="col s12">
+                <br/>
+            </div>
+            <div class="col s3">
+                <a class='dropdown-button btn' href='#' data-activates='geography_dropdown' > Location </a>
+                <ul id='geography_dropdown' class='dropdown-content'></ul>
+            </div>
+            <div class="col s9">
+                <div id="geography" class="selected_item"></div>
+            </div>
+        </div>
+    </div>
+
+    </body>
+</html>
