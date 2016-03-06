@@ -2,7 +2,7 @@ import random
 
 from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
-from prototype.models import Offer, Merchant, Vendor, Bank, User
+from prototype.models import Offer, Merchant, Vendor, Bank, User, Relevance
 from config import vendor_commission, bank_commission, bank_commission_clm
 
 def index(request):
@@ -12,6 +12,10 @@ def index(request):
 def customer(request, user_id):
     context = {'user_id': user_id}
     return render(request, 'customer.html', context)
+
+def backend_analytics(request):
+    context = {'data': 'Hello'}
+    return render(request, 'backend_analytics.html', context)
 
 def show_offers(request):
     params = request.GET
@@ -184,3 +188,16 @@ def initialize_vendor():
 def initialize_bank():
     bank = Bank()
     bank.save()
+
+
+def get_relevance_data(request):
+    data = {'unique_id': [], 'index': []}
+    try:
+        relevance_data = Relevance.objects.all()
+        for user in relevance_data:
+            data['unique_id'].append(user.unique_id)
+            data['index'].append(user.index)
+        response = {'success': True, 'data': data}
+    except Exception as e:
+        response = {'success': False, 'error': str(e)}
+    return JsonResponse(response)

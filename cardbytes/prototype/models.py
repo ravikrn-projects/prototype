@@ -23,3 +23,7 @@ class Vendor(models.Model):
 class Bank(models.Model):
 	revenue_with_clm = models.FloatField(default=0)
 	revenue_without_clm = models.FloatField(default=0) 
+
+class Relevance(models.Model):
+    unique_id = models.IntegerField(default=0)
+    index = models.FloatField(default=0)
