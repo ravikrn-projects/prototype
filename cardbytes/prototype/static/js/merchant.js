@@ -16,6 +16,27 @@ function loadDropDownList(items, type){
     eval("selected_"+type+"=0");
 }
 
+function generateOffer(){
+    if($('#cashback').val() === "")
+        $('#generate_msg').html("<span class='failure'>Enter cashback value.</span>");
+    else
+        $.ajax(
+                {
+                    url: "http://127.0.0.1:8000/cardbytes/generate_offer", 
+                    data: {
+                            merchant_id: merchant_id,
+                            cashback: $("#cashback").val(),
+                            goal_id: selected_goal,
+                            customer_tag_id: selected_tag,
+                            geography_id: selected_geography,
+                    },
+                    success: function(result){
+                        $('#generate_msg').html("<span class='success'>Offer successfully generated.</span>");
+                    }
+                }
+        );
+}
+
 function initialize(){
     loadDropDownList(goals, "goal");
     loadDropDownList(tags, "tag");

@@ -29,31 +29,38 @@
                 <br/>
             </div>
             <div class="col s3">
-                <a class='dropdown-button btn' href='#' data-activates='goal_dropdown' > Goal </a>
+                <a class='dropdown-button btn fill-parent-btn' href='#' data-activates='goal_dropdown' > Goal </a>
                 <ul id='goal_dropdown' class='dropdown-content'></ul>
             </div>
             <div class="col s9">
-                <div id="goal" class="selected_item"></div>
+                <div id="goal" class="centered-text"></div>
             </div>
-            <div class="col s12">
-                <br/>
-            </div>
+            <div class="col s12"><br/></div>
             <div class="col s3">
-                <a class='dropdown-button btn' href='#' data-activates='tag_dropdown' > Customer Type </a>
+                <a class='dropdown-button btn fill-parent-btn' href='#' data-activates='tag_dropdown' > Customer Type </a>
                 <ul id='tag_dropdown' class='dropdown-content'></ul>
             </div>
             <div class="col s9">
-                <div id="tag" class="selected_item"></div>
+                <div id="tag" class="centered-text"></div>
             </div>
-            <div class="col s12">
-                <br/>
-            </div>
+            <div class="col s12"><br/></div>
             <div class="col s3">
-                <a class='dropdown-button btn' href='#' data-activates='geography_dropdown' > Location </a>
+                <a class='dropdown-button btn fill-parent-btn' href='#' data-activates='geography_dropdown' > Location </a>
                 <ul id='geography_dropdown' class='dropdown-content'></ul>
             </div>
             <div class="col s9">
-                <div id="geography" class="selected_item"></div>
+                <div id="geography" class="centered-text"></div>
+            </div>
+            <div class="col s12"><br/></div>
+            <div class="col s3">
+                <input placeholder="% Cashback" id="cashback" type="number" class="validate">
+            </div>
+            <div class="col s12"><br/></div>
+            <div class="col s3">
+                <a class="waves-effect waves-light btn fill-parent-btn" id="generate" onClick="generateOffer()">Generate Offer</a>
+            </div>
+            <div class="col s9">
+                <div id="generate_msg" class="centered-text"></div>
             </div>
         </div>
     </div>
