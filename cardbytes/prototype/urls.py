@@ -5,6 +5,7 @@ from . import views
 urlpatterns = [
     url(r'^$', views.index, name='index'),
     url(r'^customer/(?P<user_id>[0-9]+)$', views.customer, name='customer'),
+    url(r'^backend_analytics$', views.backend_analytics, name='backend_analytics'),
     url(r'^merchant/(?P<merchant_id>[0-9]+)$', views.merchant, name='merchant'),
     url(r'^show_offers$', views.show_offers, name='show_offers'),
     url(r'^generate_offers$', views.generate_offers, name='generate_offers'),
@@ -14,4 +15,5 @@ urlpatterns = [
     url(r'^user$', views.user, name='user'),
     url(r'^transact$', views.transact, name='transact'),
     url(r'^initialize$', views.initialize, name='initialize'),
+    url(r'^get_relevance_data$', views.get_relevance_data, name='get_relevance_data'),
 ]
