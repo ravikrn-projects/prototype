@@ -1,9 +1,10 @@
 import random
-
+import json
 from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
 from prototype.models import Offer, Merchant, Vendor, Bank, User, Relevance
-from config import vendor_commission, bank_commission, bank_commission_clm
+from config import vendor_commission, bank_commission, bank_commission_clm,\
+        tags, geography, goals
 
 def index(request):
     context = {'data': 'Hello'}
@@ -13,9 +14,16 @@ def customer(request, user_id):
     context = {'user_id': user_id}
     return render(request, 'customer.html', context)
 
+
 def backend_analytics(request):
-    context = {'data': 'Hello'}
-    return render(request, 'backend_analytics.html', context)
+    return render(request, 'backend_analytics.html')
+
+def merchant(request, merchant_id):
+    context = {'merchant_id': merchant_id,
+               'tags': json.dumps(tags),
+               'geography': json.dumps(geography),
+               'goals': json.dumps(goals)}
+    return render(request, 'merchant.html', context)
 
 def show_offers(request):
     params = request.GET

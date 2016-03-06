@@ -6,6 +6,7 @@ urlpatterns = [
     url(r'^$', views.index, name='index'),
     url(r'^customer/(?P<user_id>[0-9]+)$', views.customer, name='customer'),
     url(r'^backend_analytics$', views.backend_analytics, name='backend_analytics'),
+    url(r'^merchant/(?P<merchant_id>[0-9]+)$', views.merchant, name='merchant'),
     url(r'^show_offers$', views.show_offers, name='show_offers'),
     url(r'^generate_offers$', views.generate_offers, name='generate_offers'),
     url(r'^get_bank_revenue$', views.get_bank_revenue, name='get_bank_revenue'),
