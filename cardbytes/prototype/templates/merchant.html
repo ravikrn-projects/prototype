@@ -10,7 +10,11 @@
         <script type="text/javascript" src="{% static "js/jquery-2.2.1.min.js" %}"></script>           
         <script type="text/javascript" src="{% static "js/materialize.min.js" %}"></script>
 
-        <script type="text/javascript"> var merchant_id = {{merchant_id}}</script>
+        <script type="text/javascript"> var merchant_id = {{merchant_id}};</script>
+        <script type="text/javascript"> var goals = {{goals|safe}};</script>
+        <script type="text/javascript"> var tags = {{tags|safe}};</script>
+        <script type="text/javascript"> var geography = {{geography|safe}}; </script>
+
         <script type="text/javascript" src="{% static "js/merchant.js" %}"></script>
     </head>
     <body>
