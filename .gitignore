@@ -2,3 +2,5 @@
 *.swp
 cardbytes/db.sqlite3
 cardbytes/prototype/migrations
+*LICENSE*
+*static/README.md
