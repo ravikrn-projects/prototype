@@ -1,8 +1,16 @@
-{% load staticfiles %}
-
-{% block js %}
+<!DOCTYPE html>
+<html>
+    <head>
+        {% load staticfiles %}
         <link rel="stylesheet" href="{% static "css/materialize.min.css" %}">
 
         <script type="text/javascript" src="{% static "js/jquery-2.2.1.min.js" %}"></script>           
         <script type="text/javascript" src="{% static "js/materialize.min.js" %}"></script>
-{% endblock %}
+
+        {% block head %}{% endblock head%}
+    </head>
+
+    <body>
+        {% block content %}{% endblock content %}
+    </body>
+</html>
