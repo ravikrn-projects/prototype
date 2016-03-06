@@ -1,17 +1,4 @@
 
-function generate_offers(){ 
-	$('#generate_offers').on('click',  function(){
-        $.ajax(
-        		{	
-        			url: "http://localhost:8000/cardbytes/generate_offers?", 
-          			success: function(result){
-        				console.log('success');
-        			}
-        		}
-        	);
-      }
-    );
-}
 
 function create_table(){
 		$('#generate_offers').on('click',  function(){
@@ -57,7 +44,6 @@ function create_table(){
 }
 
 function get_bank_revenue(){
-	 $(document).ready(function(){
         $.ajax({url: "http://localhost:8000/cardbytes/get_bank_revenue?", 
           success: function(result){
           var revenue = result['revenue_without_clm'];
@@ -67,19 +53,16 @@ function get_bank_revenue(){
           div.innerHTML += "<p class='white-text'>"+ revenue + "</p>" 
           div_clm.innerHTML += "<p class='white-text'>"+ revenue_clm + "</p>" 
         }});
-      });
 }
 
 
 function get_vendor_revenue(){
-	$(document).ready(function(){
         $.ajax({url: "http://localhost:8000/cardbytes/get_vendor_revenue?", 
           success: function(result){
           var revenue = result['revenue'];
           var div = document.getElementById('card_revenue');
           div.innerHTML += "<p class='white-text'>"+ Math.floor(revenue) + "</p>" 
         }});
-      });
 }
 
 function initialize(){

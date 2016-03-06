@@ -6,7 +6,6 @@ $(document).ready(function(){
                    var data = result['data']['index']
                     console.log(data);
                     data.sort();
-                   $(function () { 
                  $('#container').highcharts({
         chart: {
             type: 'line'
@@ -26,7 +25,7 @@ $(document).ready(function(){
             data: data
         }]
             });
-                });
+        
                 }
             }
     );
