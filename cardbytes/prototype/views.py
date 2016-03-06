@@ -28,7 +28,7 @@ def merchant(request, merchant_id):
 def show_offers(request):
     params = request.GET
     try:
-        offers = Offer.objects.all().values('user_id', 'merchant_id', 'cashback', 'cashback_used')
+        offers = Offer.objects.all().values()
         offer_list = list(offers)
         offer_list_response = []
         for offer in offer_list:
