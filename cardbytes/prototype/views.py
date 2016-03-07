@@ -174,14 +174,14 @@ def get_cashback(user_id, merchant_id):
 def initialize(request):
     try:
         #delete previous data
-        User.objects.all().delete()
-        Merchant.objects.all().delete()
-        Offer.objects.all().delete()
+        # User.objects.all().delete()
+        # Merchant.objects.all().delete()
+        # Offer.objects.all().delete()
         Vendor.objects.all().delete()
         Bank.objects.all().delete()
         # insert new data
-        initialize_users()
-        initialize_merchants()
+        # initialize_users()
+        # initialize_merchants()
         initialize_vendor()
         initialize_bank()
 

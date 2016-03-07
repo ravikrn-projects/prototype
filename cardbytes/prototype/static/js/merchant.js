@@ -31,7 +31,10 @@ function generateOffer(){
                             geography_id: selected_geography,
                     },
                     success: function(result){
-                        $('#generate_msg').html("<span class='success'>Offer successfully generated.</span>");
+                        if(result.success == true)
+                            $('#generate_msg').html("<span class='success'>Offer successfully generated.</span>");
+                        else
+                            $('#generate_msg').html("<span class='failure'>An error occured.</span>");
                     }
                 }
         );
@@ -41,7 +44,6 @@ function loadChart(){
     $.ajax({url: "http://localhost:8000/cardbytes/get_transaction_data",
             success: function(result){
                 var data = result['data']
-                console.log(data);
                 $('#chart_container').highcharts({
                     chart: {
                         type: 'line'
