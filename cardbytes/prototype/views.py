@@ -7,7 +7,7 @@ from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
 from prototype.models import Offer, Merchant, Vendor, Bank, User, Relevance
 from config import vendor_commission, bank_commission, bank_commission_clm,\
-        tags, geography, goals
+        income_tag, customer_tag, goals
 
 def index(request):
     context = {'data': 'Hello'}
@@ -22,8 +22,8 @@ def backend_analytics(request):
 
 def merchant(request, merchant_id):
     context = {'merchant_id': merchant_id,
-               'tags': json.dumps(tags),
-               'geography': json.dumps(geography),
+               'income_tag': json.dumps(income_tag),
+               'customer_tag': json.dumps(customer_tag),
                'goals': json.dumps(goals)}
     return render(request, 'merchant.html', context)
 
@@ -36,8 +36,8 @@ def show_offers(request):
         for offer in offer_list:
             offer['merchant'] = Merchant.objects.get(id = offer['merchant_id']).name
             offer['goal'] = goals[offer['goal']]['name'] 
-            offer['customer_tag'] = tags[offer['customer_tag']]['name'] 
-            offer['geography'] = geography[offer['geography']]['name'] 
+            offer['income_tag'] = income_tag[offer['income_tag']]['name'] 
+            offer['customer_tag'] = customer_tag[offer['customer_tag']]['name'] 
             offer_list_response.append(offer)
         response = {'success': True, 'offers': offer_list_response}
     except Exception as e:
@@ -120,10 +120,12 @@ def update_past_transaction(request):
         with open(os.path.join(BASE_DIR, 'data/transaction.csv'), 'rb') as data_file:
             reader = csv.DictReader(data_file)
             for row in reader:
-                user = User(user_id=row['unique_id'])                
-                merchant = Merchant(merchant_id=row['merchant_id'])
-                user.save()
-                merchant.save()
+                if len(User.objects.filter(user_id=row['unique_id'])) == 0:
+                    user = User(user_id=row['unique_id'])                
+                    user.save()
+                if len(Merchant.objects.filter(merchant_id=row['unique_id'])) == 0:
+                    merchant = Merchant(merchant_id=row['merchant_id'])
+                    merchant.save()
                 params = {
                     'user_id': row['unique_id'],
                     'merchant_id': row['merchant_id'],
@@ -208,16 +210,16 @@ def generate_offer(request):
     merchant_id = params['merchant_id']
     cashback = float(params['cashback'])/100
     goal_id = params['goal_id']
+    income_id = params['income_tag_id']
     customer_tag_id = params['customer_tag_id']
-    geography_id = params['geography_id']
     try:
         merchant = Merchant.objects.get(id=merchant_id)
         offer = Offer(merchant=merchant,
                       cashback=cashback,
                       cashback_used=False,
                       goal=goal_id,
-                      customer_tag=customer_tag_id,
-                      geography=geography_id
+                      income_tag=income_id,
+                      customer_tag=customer_tag_id
                      )
         offer.save()
         response = {'success': True}

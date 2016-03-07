@@ -27,8 +27,8 @@ function generateOffer(){
                             merchant_id: merchant_id,
                             cashback: $("#cashback").val(),
                             goal_id: selected_goal,
-                            customer_tag_id: selected_tag,
-                            geography_id: selected_geography,
+                            income_tag_id: selected_income_tag,
+                            customer_tag_id: selected_customer_tag,
                     },
                     success: function(result){
                         $('#generate_msg').html("<span class='success'>Offer successfully generated.</span>");
@@ -85,8 +85,8 @@ function loadChart(){
 
 function initialize(){
     loadDropDownList(goals, "goal");
-    loadDropDownList(tags, "tag");
-    loadDropDownList(geography, "geography");
+    loadDropDownList(tags, "income_tag");
+    loadDropDownList(customer_tag, "customer_tag");
     loadChart();
 }
 

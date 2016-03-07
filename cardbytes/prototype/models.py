@@ -17,8 +17,8 @@ class Offer(models.Model):
     merchant = models.ForeignKey(Merchant, on_delete=models.CASCADE)
     cashback = models.FloatField(default=0)
     goal = models.IntegerField()
+    income_tag = models.IntegerField()
     customer_tag = models.IntegerField()
-    geography = models.IntegerField()
 
 class Vendor(models.Model):
     revenue = models.FloatField(default=0)
