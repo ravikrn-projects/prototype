@@ -85,7 +85,7 @@ function loadChart(){
 
 function initialize(){
     loadDropDownList(goals, "goal");
-    loadDropDownList(tags, "income_tag");
+    loadDropDownList(income_tag, "income_tag");
     loadDropDownList(customer_tag, "customer_tag");
     loadChart();
 }
