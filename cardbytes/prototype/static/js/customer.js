@@ -56,7 +56,8 @@ function updateMerchantData(){
 function initialize(){
     updateUserData();
     updateMerchantData();
+    $('#buy').click(buy);
     setInterval("updateUserData()", 1000);
 }
 
-$(document).ready(initialize());
+$(document).ready(initialize);

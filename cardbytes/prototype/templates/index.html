@@ -1,53 +1,44 @@
-<title>Prototype</title>
+{% extends "base.html" %}
 {% load staticfiles %}
 
-<link rel="stylesheet" href="{% static "css/materialize.min.css" %}">
-<link rel="stylesheet" href="{% static "css/index.css" %}">
+{%block head%}
+        <script type="text/javascript" src="{% static "js/index.js" %}"></script>
+        <title>Prototype</title>
+{%endblock head%}
 
-<script type="text/javascript" src="{% static "js/jquery-2.2.1.min.js" %}"></script>           
-<script type="text/javascript" src="{% static "js/materialize.min.js" %}"></script>
-<script type="text/javascript" src="{% static "js/index.js" %}"></script>
-
-
+{% block content %}
 <div class="container">
-
-
-<div id ='card_panel' class="row">
-    <div class="col s12">
-        <h4>CardBytes CLM prototype </h4>
-    </div>
-
-      <div class="col s6">
-      <div class="card blue-grey accent-3">
-        <div class="card-content white-text">
-         <p id = "bank_clm" >Bank Revenue with CLM  </p>
-        </div>
-      </div>
-      </div>
-
-<div class="col s6">
-      <div class="card blue-grey accent-3">
-        <div class="card-content white-text">
-         <p id = 'card_revenue' >Cardbytes Revenue  </p>
-        </div>
-      </div>
-    
-    </div>
-    <div class="col s6">
-      <div class="card blue-grey accent-3">
-        <div class="card-content white-text">
-         <p id = "bank_wo_clm" >Bank Revenue without CLM  </p>
-        </div>
-      </div>
-    </div>
-
-    <div class="col s12">
-  <div>
-      <a id ="generate_offers" class="waves-effect waves-light btn" onClick = "create_table()">Generate offers</a>
-    </div>
-    </div>
-    <div id="table" class="col s12">
+    <div id ='card_panel' class="row">
+        <div class="col s12">
+            <h4>CardBytes CLM prototype </h4>
         </div>
 
+        <div class="col s6">
+            <div class="card blue-grey accent-3">
+                <div class="card-content white-text">
+                    <p id = "bank_clm" >Bank Revenue with CLM  </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col s6">
+             <div class="card blue-grey accent-3">
+                <div class="card-content white-text">
+                    <p id = 'card_revenue' >Cardbytes Revenue  </p>
+                </div>
+             </div>
+        </div>
+            
+        <div class="col s6">
+             <div class="card blue-grey accent-3">
+                <div class="card-content white-text">
+                    <p id = "bank_wo_clm" >Bank Revenue without CLM  </p>
+                </div>
+             </div>
+        </div>
+
+        <div id="table" class="col s12"></div>
+
+    </div>
 </div>
-</div>
+{% endblock content%}
