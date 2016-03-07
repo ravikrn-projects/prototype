@@ -12,13 +12,20 @@ class User(models.Model):
     user_id = models.IntegerField(primary_key=True, default=0)
     acc_balance = models.FloatField(default=10000)
     cashback_realized = models.FloatField(default=0)
+    age = models.IntegerField(default=18)
+    customer_tag = models.IntegerField(default=0)
+    frequent_buyer = models.CharField(max_length=200, default="Frequent")
+    income_tag = models.IntegerField(default=0)
+    city = models.CharField(max_length=200)
+    locality = models.CharField(max_length=200)
+    state = models.CharField(max_length=200)
 
 class Offer(models.Model):
-    merchant = models.ForeignKey(Merchant, on_delete=models.CASCADE)
+    merchant = models.ForeignKey(Merchant, on_delete=models.CASCADE, unique=True)
     cashback = models.FloatField(default=0)
     goal = models.IntegerField()
+    income_tag = models.IntegerField()
     customer_tag = models.IntegerField()
-    geography = models.IntegerField()
 
 class Vendor(models.Model):
     revenue = models.FloatField(default=0)
