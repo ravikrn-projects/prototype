@@ -63,7 +63,7 @@ def get_bank_revenue(request):
 
 def get_merchants(request):
     try:
-        merchants = Merchant.objects.all().values('id', 'name')
+        merchants = Merchant.objects.all().values('merchant_id', 'name')
         response = {'success': True, 'merchants': list(merchants)}
     except Exception as e:
         response = {'success': False, 'error': str(e)}
@@ -74,7 +74,7 @@ def get_merchants(request):
 def user(request):
     user_id = request.GET['user_id']
     try:
-        user = User.objects.filter(id=user_id).values('id', 'name', \
+        user = User.objects.filter(user_id=user_id).values('user_id', 'name', \
                 'acc_balance', 'cashback_realized')[0]
         data = user.update({'message': get_message(user_id)})
         response = {'success': True, 'user': user}
