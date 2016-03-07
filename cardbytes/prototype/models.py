@@ -17,10 +17,10 @@ class User(models.Model):
     age = models.IntegerField(default=18)
     customer_tag = models.IntegerField(default=0)
     frequent_buyer = models.CharField(max_length=200, default="Frequent")
-    income_tag = models.IntegerField(default=0)
-    city = models.CharField(max_length=200)
-    locality = models.CharField(max_length=200)
-    state = models.CharField(max_length=200)
+    income_tag = models.IntegerField(default=0, blank=True)
+    city = models.CharField(max_length=200, blank=True)
+    locality = models.CharField(max_length=200, blank=True)
+    state = models.CharField(max_length=200, blank=True)
 
 class Offer(models.Model):
     merchant = models.ForeignKey(Merchant, on_delete=models.CASCADE, unique=True)

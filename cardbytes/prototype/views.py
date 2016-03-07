@@ -3,6 +3,7 @@ import csv
 import os
 import json
 import datetime
+import time
 import random
 
 from collections import defaultdict
@@ -37,7 +38,7 @@ def show_offers(request):
         offer_list = list(offers)
         offer_list_response = []
         for offer in offer_list:
-            offer['merchant'] = Merchant.objects.get(id = offer['merchant_id']).name
+            offer['merchant'] = Merchant.objects.get(merchant_id = offer['merchant_id']).name
             offer['goal'] = goals[offer['goal']]['name'] 
             offer['income_tag'] = income_tag[offer['income_tag']]['name'] 
             offer['customer_tag'] = customer_tag[offer['customer_tag']]['name'] 
@@ -66,7 +67,7 @@ def get_bank_revenue(request):
 
 def get_merchants(request):
     try:
-        merchants = Merchant.objects.all().values('id', 'name')
+        merchants = Merchant.objects.all().values()
         response = {'success': True, 'merchants': list(merchants)}
     except Exception as e:
         response = {'success': False, 'error': str(e)}
@@ -77,8 +78,7 @@ def get_merchants(request):
 def user(request):
     user_id = request.GET['user_id']
     try:
-        user = User.objects.filter(id=user_id).values('id', 'name', \
-                'acc_balance', 'cashback_realized')[0]
+        user = User.objects.filter(user_id=user_id).values()[0]
         data = user.update({'message': get_message(user_id)})
         response = {'success': True, 'user': user}
     except Exception as e:
@@ -89,8 +89,11 @@ def user(request):
 
 def get_message(user_id):
     try:
-        offer = Offer.objects.get(user_id=user_id)
-        merchant = Merchant.objects.get(id=offer.merchant_id)
+        user = User.objects.get(user_id=user_id)
+        income_tag = user.income_tag
+        customer_tag = user.customer_tag
+        offer = Offer.objects.filter(customer_tag=customer_tag, income_tag=income_tag)[0]    
+        merchant = Merchant.objects.get(merchant_id=offer.merchant_id)
         message = 'Get ' + str(offer.cashback * 100) + '% cashback on transaction at ' + merchant.name
     except Exception:
         message = ''    
@@ -98,7 +101,15 @@ def get_message(user_id):
 
 def transact(request):
     params = request.GET
-    res = JsonResponse(transact_update(params))
+    data = {
+        'transaction_id': Transaction.objects.latest('transaction_id').transaction_id,
+        'user_id': params['user_id'],
+        'merchant_id': params['merchant_id'],
+        'amount': params['amount'],
+        'timestamp': time.time(),
+        'bank_id': 0
+    }    
+    res = JsonResponse(transact_update(data))
     res["Access-Control-Allow-Origin"] = "*"
     return res
 
@@ -114,7 +125,7 @@ def transact_update(params):
         update_user(user_id, cashback, amount)
         update_vendor(cashback, amount)
         update_bank(cashback, amount)
-        update_status(user_id, merchant_id, cashback)
+        # update_status(user_id, merchant_id, cashback)
         txn = Transaction(transaction_id=transaction_id,
                           timestamp=timestamp,
                           bank_id=bank_id,
@@ -215,7 +226,7 @@ def get_cashback(user_id, merchant_id):
         user = User.objects.get(user_id=user_id)
         income_tag = user.income_tag
         customer_tag = user.customer_tag
-        offer = Offer.objects.get(customer_tag=customer_tag, income_tag=income_tag, merchant_id=merchant_id)    
+        offer = Offer.objects.filter(customer_tag=customer_tag, income_tag=income_tag, merchant_id=merchant_id)[0]    
         cashback = offer.cashback
     except Exception as e:
         pass
