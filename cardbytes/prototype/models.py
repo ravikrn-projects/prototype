@@ -6,6 +6,8 @@ from django.db import models
 class Merchant(models.Model):
     name = models.CharField(max_length=200)
     merchant_id = models.IntegerField(primary_key=True, default=0)
+    category = models.CharField(max_length=100, blank=True)
+    location = models.CharField(max_length=100, blank=True)
 
 class User(models.Model):
     name = models.CharField(max_length=200, default='****')
@@ -15,10 +17,10 @@ class User(models.Model):
     age = models.IntegerField(default=18)
     customer_tag = models.IntegerField(default=0)
     frequent_buyer = models.CharField(max_length=200, default="Frequent")
-    income_tag = models.IntegerField(default=0)
-    city = models.CharField(max_length=200)
-    locality = models.CharField(max_length=200)
-    state = models.CharField(max_length=200)
+    income_tag = models.IntegerField(default=0, blank=True)
+    city = models.CharField(max_length=200, blank=True)
+    locality = models.CharField(max_length=200, blank=True)
+    state = models.CharField(max_length=200, blank=True)
 
 class Offer(models.Model):
     merchant = models.ForeignKey(Merchant, on_delete=models.CASCADE, unique=True)
@@ -33,6 +35,14 @@ class Vendor(models.Model):
 class Bank(models.Model):
     revenue_with_clm = models.FloatField(default=0)
     revenue_without_clm = models.FloatField(default=0) 
+
+class Transaction(models.Model):
+    transaction_id = models.IntegerField(primary_key=True)
+    timestamp = models.DateTimeField()
+    bank_id = models.IntegerField()
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    merchant = models.ForeignKey(Merchant, on_delete=models.CASCADE)
+    amount = models.FloatField()
 
 class Relevance(models.Model):
     unique_id = models.IntegerField(default=0)

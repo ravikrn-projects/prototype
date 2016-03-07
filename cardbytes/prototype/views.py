@@ -3,9 +3,13 @@ import csv
 import os
 import json
 import datetime
+import time
+import random
+
+from collections import defaultdict
 from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
-from prototype.models import Offer, Merchant, Vendor, Bank, User, Relevance
+from prototype.models import Offer, Merchant, Vendor, Bank, User, Relevance, Transaction
 from config import vendor_commission, bank_commission, bank_commission_clm,\
         income_tag, customer_tag, goals
 
@@ -34,7 +38,7 @@ def show_offers(request):
         offer_list = list(offers)
         offer_list_response = []
         for offer in offer_list:
-            offer['merchant'] = Merchant.objects.get(id = offer['merchant_id']).name
+            offer['merchant'] = Merchant.objects.get(merchant_id = offer['merchant_id']).name
             offer['goal'] = goals[offer['goal']]['name'] 
             offer['income_tag'] = income_tag[offer['income_tag']]['name'] 
             offer['customer_tag'] = customer_tag[offer['customer_tag']]['name'] 
@@ -63,7 +67,7 @@ def get_bank_revenue(request):
 
 def get_merchants(request):
     try:
-        merchants = Merchant.objects.all().values('id', 'name')
+        merchants = Merchant.objects.all().values()
         response = {'success': True, 'merchants': list(merchants)}
     except Exception as e:
         response = {'success': False, 'error': str(e)}
@@ -74,8 +78,7 @@ def get_merchants(request):
 def user(request):
     user_id = request.GET['user_id']
     try:
-        user = User.objects.filter(id=user_id).values('id', 'name', \
-                'acc_balance', 'cashback_realized')[0]
+        user = User.objects.filter(user_id=user_id).values()[0]
         data = user.update({'message': get_message(user_id)})
         response = {'success': True, 'user': user}
     except Exception as e:
@@ -86,8 +89,11 @@ def user(request):
 
 def get_message(user_id):
     try:
-        offer = Offer.objects.get(user_id=user_id)
-        merchant = Merchant.objects.get(id=offer.merchant_id)
+        user = User.objects.get(user_id=user_id)
+        income_tag = user.income_tag
+        customer_tag = user.customer_tag
+        offer = Offer.objects.filter(customer_tag=customer_tag, income_tag=income_tag)[0]    
+        merchant = Merchant.objects.get(merchant_id=offer.merchant_id)
         message = 'Get ' + str(offer.cashback * 100) + '% cashback on transaction at ' + merchant.name
     except Exception:
         message = ''    
@@ -95,7 +101,15 @@ def get_message(user_id):
 
 def transact(request):
     params = request.GET
-    res = JsonResponse(transact_update(params))
+    data = {
+        'transaction_id': Transaction.objects.latest('transaction_id').transaction_id,
+        'user_id': params['user_id'],
+        'merchant_id': params['merchant_id'],
+        'amount': params['amount'],
+        'timestamp': time.time(),
+        'bank_id': 0
+    }    
+    res = JsonResponse(transact_update(data))
     res["Access-Control-Allow-Origin"] = "*"
     return res
 
@@ -103,12 +117,22 @@ def transact_update(params):
     user_id = params['user_id']
     merchant_id = params['merchant_id']
     amount = float(params['amount'])
+    timestamp = datetime.datetime.fromtimestamp(int(params['timestamp']))
+    transaction_id = params['transaction_id']
+    bank_id = params['bank_id']
     try:
         cashback = get_cashback(user_id, merchant_id)
         update_user(user_id, cashback, amount)
         update_vendor(cashback, amount)
         update_bank(cashback, amount)
-        update_status(user_id, merchant_id, cashback)
+        # update_status(user_id, merchant_id, cashback)
+        txn = Transaction(transaction_id=transaction_id,
+                          timestamp=timestamp,
+                          bank_id=bank_id,
+                          user=User.objects.get(user_id=user_id),
+                          merchant=Merchant.objects.get(merchant_id=merchant_id),
+                          amount=amount)
+        txn.save()
         response = {'success': True}
     except Exception as e:
         response = {'success': False, 'error': str(e)}
@@ -120,20 +144,27 @@ def update_past_transaction(request):
         with open(os.path.join(BASE_DIR, 'data/transaction.csv'), 'rb') as data_file:
             reader = csv.DictReader(data_file)
             for row in reader:
-
                 if len(User.objects.filter(user_id=row['unique_id'])) == 0:
                     user = User(user_id=row['unique_id'])                
                     user.save()
                 if len(Merchant.objects.filter(merchant_id=row['unique_id'])) == 0:
-                    merchant = Merchant(merchant_id=row['merchant_id'])
+                    merchant = Merchant(merchant_id=row['merchant_id'], 
+                                    name=row['merchant_name'],
+                                    category=row['merchant_category'],
+                                    location=row['merchant_location']
+                                    )
                     merchant.save()
                 params = {
+                    'transaction_id': row['transaction_id'],
                     'user_id': row['unique_id'],
                     'merchant_id': row['merchant_id'],
-                    'amount': row['amount']
+                    'amount': row['amount'],
+                    'timestamp': row['timestamp'],
+                    'bank_id': row['bank_id']
                 }    
-                transact_update(params)
-        response = {'success': True}
+                response = transact_update(params)
+                if response['success'] == False:
+                    raise Exception(response['error'])
     except Exception as e:
         response = {'success': False, 'error': str(e)}
     return JsonResponse(response)
@@ -195,7 +226,7 @@ def get_cashback(user_id, merchant_id):
         user = User.objects.get(user_id=user_id)
         income_tag = user.income_tag
         customer_tag = user.customer_tag
-        offer = Offer.objects.get(customer_tag=customer_tag, income_tag=income_tag, merchant_id=merchant_id)    
+        offer = Offer.objects.filter(customer_tag=customer_tag, income_tag=income_tag, merchant_id=merchant_id)[0]    
         cashback = offer.cashback
     except Exception as e:
         pass
@@ -204,12 +235,14 @@ def get_cashback(user_id, merchant_id):
 def initialize(request):
     try:
         #delete previous data
-        User.objects.all().delete()
-        Merchant.objects.all().delete()
-        Offer.objects.all().delete()
+        # User.objects.all().delete()
+        # Merchant.objects.all().delete()
+        # Offer.objects.all().delete()
         Vendor.objects.all().delete()
         Bank.objects.all().delete()
         # insert new data
+        # initialize_users()
+        # initialize_merchants()
         initialize_vendor()
         initialize_bank()
 
@@ -263,24 +296,26 @@ def get_relevance_data(request):
     return JsonResponse(response)
 
 def get_transaction_data(request):
+    merchant_id = request.GET['merchant_id']
     try:
+        data = Transaction.objects.filter(merchant_id=merchant_id).values()
+        data = list(data)
+        txn_map = defaultdict(int)
+        for item in data:
+            txn_map[item['timestamp'].date()] += 1
+        random.seed(100)
         data = {
-                'x': [datetime.date.fromordinal(735720),
-                      datetime.date.fromordinal(735820),
-                      datetime.date.fromordinal(735880),
-                      datetime.date.fromordinal(735920),
-                      datetime.date.fromordinal(735950)
-                    ],
-                'y':[{
-                      'name': 'transactions',
-                      'data': [10, 20, 100, 50, 401]
-                    },
-                    {
-                      'name': 'cashback',
-                      'data': [5000, 1000, 5000, 2000, 1001]
-                    }
+                'x': sorted(txn_map.keys()),
+                'y': [{
+                        'name': 'transactions',
+                        'data': [txn_map[item] for item in sorted(txn_map)]
+                      },
+                      {
+                        'name': 'cashback',
+                        'data': [random.uniform(1,5)*txn_map[item] for item in sorted(txn_map)]
+                      }
                     ]
-               }
+                }
         response = {'success': True, 'data': data}
     except Exception as e:
         response = {'success': False, 'error': str(e)}

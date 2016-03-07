@@ -31,7 +31,10 @@ function generateOffer(){
                             customer_tag_id: selected_customer_tag,
                     },
                     success: function(result){
-                        $('#generate_msg').html("<span class='success'>Offer successfully generated.</span>");
+                        if(result.success == true)
+                            $('#generate_msg').html("<span class='success'>Offer successfully generated.</span>");
+                        else
+                            $('#generate_msg').html("<span class='failure'>An error occured.</span>");
                     }
                 }
         );
@@ -39,9 +42,11 @@ function generateOffer(){
 
 function loadChart(){
     $.ajax({url: "http://localhost:8000/cardbytes/get_transaction_data",
+            data: {
+                    merchant_id: merchant_id,
+            },
             success: function(result){
                 var data = result['data']
-                console.log(data);
                 $('#chart_container').highcharts({
                     chart: {
                         type: 'line'
