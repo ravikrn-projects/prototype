@@ -14,7 +14,6 @@ class User(models.Model):
 class Offer(models.Model):
     merchant = models.ForeignKey(Merchant, on_delete=models.CASCADE)
     cashback = models.FloatField(default=0)
-    cashback_used = models.BooleanField(default=False)
     goal = models.IntegerField()
     customer_tag = models.IntegerField()
     geography = models.IntegerField()

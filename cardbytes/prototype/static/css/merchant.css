@@ -13,3 +13,8 @@
 .failure{
     color: #ff1744;
 }
+
+.txn-chart{
+    width:100%;
+    height:400px;
+}

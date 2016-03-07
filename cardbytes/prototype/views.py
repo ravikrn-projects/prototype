@@ -1,5 +1,6 @@
 import random
 import json
+import datetime
 from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
 from prototype.models import Offer, Merchant, Vendor, Bank, User, Relevance
@@ -13,7 +14,6 @@ def index(request):
 def customer(request, user_id):
     context = {'user_id': user_id}
     return render(request, 'customer.html', context)
-
 
 def backend_analytics(request):
     return render(request, 'backend_analytics.html')
@@ -33,6 +33,9 @@ def show_offers(request):
         offer_list_response = []
         for offer in offer_list:
             offer['merchant'] = Merchant.objects.get(id = offer['merchant_id']).name
+            offer['goal'] = goals[offer['goal']]['name'] 
+            offer['customer_tag'] = tags[offer['customer_tag']]['name'] 
+            offer['geography'] = geography[offer['geography']]['name'] 
             offer_list_response.append(offer)
         response = {'success': True, 'offers': offer_list_response}
     except Exception as e:
@@ -213,6 +216,30 @@ def get_relevance_data(request):
         for user in relevance_data:
             data['unique_id'].append(user.unique_id)
             data['index'].append(user.index)
+        response = {'success': True, 'data': data}
+    except Exception as e:
+        response = {'success': False, 'error': str(e)}
+    return JsonResponse(response)
+
+def get_transaction_data(request):
+    try:
+        data = {
+                'x': [datetime.date.fromordinal(735720),
+                      datetime.date.fromordinal(735820),
+                      datetime.date.fromordinal(735880),
+                      datetime.date.fromordinal(735920),
+                      datetime.date.fromordinal(735950)
+                    ],
+                'y':[{
+                      'name': 'transactions',
+                      'data': [10, 20, 100, 50, 401]
+                    },
+                    {
+                      'name': 'cashback',
+                      'data': [5000, 1000, 5000, 2000, 1001]
+                    }
+                    ]
+               }
         response = {'success': True, 'data': data}
     except Exception as e:
         response = {'success': False, 'error': str(e)}
