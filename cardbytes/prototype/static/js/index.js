@@ -1,35 +1,35 @@
 
 
 function create_table(){
-		$('#generate_offers').on('click',  function(){
-        $.ajax(
-        		{	
-        			url: "http://localhost:8000/cardbytes/generate_offers?", 
-          			success: function(result){
-        				console.log('success');
-        			}
-        		}
-        	);
-      	}
-    );
+		//$('#generate_offers').on('click',  function(){
+        //$.ajax(
+                //{	
+                    //url: "http://localhost:8000/cardbytes/generate_offers?", 
+                      //success: function(result){
+                        //console.log('success');
+                    //}
+                //}
+            //);
+          //}
+        //);
 
         $.ajax({url: "http://localhost:8000/cardbytes/show_offers?", 
         	success: function(result){
         	console.log(result);
  		var div = document.getElementById('table');
-       var html_code = "<table class='centered responsive-table highlight'>" +
-       "<thead>" +
-          "<tr>"+
-             "<th data-field='id'>User</th>"+
-             "<th data-field='merchant'>Merchant</th>"+
-             "<th data-field='cashback'>Cashback (%)</th>"+
-             "<th data-field='cashback_used'>Cashback Used</th>"+
-          "</tr>"+
+        var html_code = "<table class='centered responsive-table highlight'>" +
+        "<thead>" +
+            "<tr>"+
+                "<th data-field='id'>User</th>"+
+                "<th data-field='merchant'>Merchant</th>"+
+                "<th data-field='cashback'>Cashback (%)</th>"+
+                "<th data-field='cashback_used'>Cashback Used</th>"+
+            "</tr>"+
         "</thead>"+
         "<tbody>";
         offers = result['offers'];
         for(i=0; i < offers.length; i++){
-       html_code += "<tr>";
+        html_code += "<tr>";
        	
         	html_code += "<td>"+offers[i]['user_id']+"</td>";
         	html_code += "<td>"+offers[i]['merchant']+"</td>";
@@ -68,7 +68,8 @@ function get_vendor_revenue(){
 function initialize(){
 	get_bank_revenue();
 	get_vendor_revenue();
-
+    create_table();
+    //$('#generate_offers').click(create_table);
 }
 
-$(document).ready(initialize());
+$(document).ready(initialize);
