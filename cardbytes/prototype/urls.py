@@ -16,4 +16,5 @@ urlpatterns = [
     url(r'^transact$', views.transact, name='transact'),
     url(r'^initialize$', views.initialize, name='initialize'),
     url(r'^get_relevance_data$', views.get_relevance_data, name='get_relevance_data'),
+    url(r'^get_transaction_data$', views.get_transaction_data, name='get_transaction_data'),
 ]
