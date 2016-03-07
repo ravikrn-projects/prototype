@@ -1,6 +1,6 @@
 
 function create_table(){
-    $.ajax({url: "http://localhost:8000/cardbytes/show_offers?", 
+    $.ajax({url: show_offers_url,
             success: function(result){
                 var table_body = "";
                 offers = result['offers'];
@@ -33,7 +33,7 @@ function create_table(){
 }
 
 function get_bank_revenue(){
-        $.ajax({url: "http://localhost:8000/cardbytes/get_bank_revenue?", 
+        $.ajax({url: get_bank_revenue_url,
                 success: function(result){
                     var revenue = result['revenue_without_clm'];
                     var revenue_clm = result['revenue_with_clm'];
@@ -47,7 +47,7 @@ function get_bank_revenue(){
 
 
 function get_vendor_revenue(){
-        $.ajax({url: "http://localhost:8000/cardbytes/get_vendor_revenue?", 
+        $.ajax({url: get_vendor_revenue_url,
                 success: function(result){
                     var revenue = result['revenue'];
                     var div = document.getElementById('card_revenue');

@@ -1,7 +1,7 @@
 $(document).ready(function(){
     $.ajax(
             {
-                url: "http://localhost:8000/cardbytes/get_relevance_data?", 
+                url: get_relevance_data_url, 
                 success: function(result){
                    var data = result['data']['index']
                     console.log(data);

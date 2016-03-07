@@ -11,24 +11,37 @@ from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
 from prototype.models import Offer, Merchant, Vendor, Bank, User, Relevance, Transaction
 from config import vendor_commission, bank_commission, bank_commission_clm,\
-        income_tag, customer_tag, goals
+        income_tag, customer_tag, goals, urls
 
 def index(request):
-    context = {'data': 'Hello'}
+    context = {
+               'get_vendor_revenue_url': urls['get_vendor_revenue'],
+               'get_bank_revenue_url': urls['get_bank_revenue'],
+               'show_offers_url': urls['show_offers']
+               }
     return render(request, 'index.html', context)
 
 def customer(request, user_id):
-    context = {'user_id': user_id}
+    context = {'user_id': user_id,
+               'transact_url': urls['transact'],
+               'user_url': urls['user'],
+               'get_merchants_url': urls['get_merchants']
+            }
     return render(request, 'customer.html', context)
 
 def backend_analytics(request):
+    context = {'get_transaction_data_url': url['get_transaction_data']
+            }
     return render(request, 'backend_analytics.html')
 
 def merchant(request, merchant_id):
     context = {'merchant_id': merchant_id,
                'income_tag': json.dumps(income_tag),
                'customer_tag': json.dumps(customer_tag),
-               'goals': json.dumps(goals)}
+               'goals': json.dumps(goals),
+               'get_transaction_data_url': urls['get_transaction_data'],
+               'generate_offer_url': urls['generate_offer']
+               }
     return render(request, 'merchant.html', context)
 
 def show_offers(request):
