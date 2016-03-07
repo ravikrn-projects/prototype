@@ -42,6 +42,9 @@ function generateOffer(){
 
 function loadChart(){
     $.ajax({url: "http://localhost:8000/cardbytes/get_transaction_data",
+            data: {
+                    merchant_id: merchant_id,
+            },
             success: function(result){
                 var data = result['data']
                 $('#chart_container').highcharts({

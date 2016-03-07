@@ -3,9 +3,12 @@ import csv
 import os
 import json
 import datetime
+import random
+
+from collections import defaultdict
 from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
-from prototype.models import Offer, Merchant, Vendor, Bank, User, Relevance
+from prototype.models import Offer, Merchant, Vendor, Bank, User, Relevance, Transaction
 from config import vendor_commission, bank_commission, bank_commission_clm,\
         tags, geography, goals
 
@@ -103,12 +106,22 @@ def transact_update(params):
     user_id = params['user_id']
     merchant_id = params['merchant_id']
     amount = float(params['amount'])
+    timestamp = datetime.datetime.fromtimestamp(int(params['timestamp']))
+    transaction_id = params['transaction_id']
+    bank_id = params['bank_id']
     try:
         cashback = get_cashback(user_id, merchant_id)
         update_user(user_id, cashback, amount)
         update_vendor(cashback, amount)
         update_bank(cashback, amount)
         update_status(user_id, merchant_id, cashback)
+        txn = Transaction(transaction_id=transaction_id,
+                          timestamp=timestamp,
+                          bank_id=bank_id,
+                          user=User.objects.get(user_id=user_id),
+                          merchant=Merchant.objects.get(merchant_id=merchant_id),
+                          amount=amount)
+        txn.save()
         response = {'success': True}
     except Exception as e:
         response = {'success': False, 'error': str(e)}
@@ -121,16 +134,24 @@ def update_past_transaction(request):
             reader = csv.DictReader(data_file)
             for row in reader:
                 user = User(user_id=row['unique_id'])                
-                merchant = Merchant(merchant_id=row['merchant_id'])
+                merchant = Merchant(merchant_id=row['merchant_id'], 
+                                    name=row['merchant_name'],
+                                    category=row['merchant_category'],
+                                    location=row['merchant_location']
+                                    )
                 user.save()
                 merchant.save()
                 params = {
+                    'transaction_id': row['transaction_id'],
                     'user_id': row['unique_id'],
                     'merchant_id': row['merchant_id'],
-                    'amount': row['amount']
+                    'amount': row['amount'],
+                    'timestamp': row['timestamp'],
+                    'bank_id': row['bank_id']
                 }    
-                transact_update(params)
-        response = {'success': True}
+                response = transact_update(params)
+                if response['success'] == False:
+                    raise Exception(response['error'])
     except Exception as e:
         response = {'success': False, 'error': str(e)}
     return JsonResponse(response)
@@ -249,24 +270,26 @@ def get_relevance_data(request):
     return JsonResponse(response)
 
 def get_transaction_data(request):
+    merchant_id = request.GET['merchant_id']
     try:
+        data = Transaction.objects.filter(merchant_id=merchant_id).values()
+        data = list(data)
+        txn_map = defaultdict(int)
+        for item in data:
+            txn_map[item['timestamp'].date()] += 1
+        random.seed(100)
         data = {
-                'x': [datetime.date.fromordinal(735720),
-                      datetime.date.fromordinal(735820),
-                      datetime.date.fromordinal(735880),
-                      datetime.date.fromordinal(735920),
-                      datetime.date.fromordinal(735950)
-                    ],
-                'y':[{
-                      'name': 'transactions',
-                      'data': [10, 20, 100, 50, 401]
-                    },
-                    {
-                      'name': 'cashback',
-                      'data': [5000, 1000, 5000, 2000, 1001]
-                    }
+                'x': sorted(txn_map.keys()),
+                'y': [{
+                        'name': 'transactions',
+                        'data': [txn_map[item] for item in sorted(txn_map)]
+                      },
+                      {
+                        'name': 'cashback',
+                        'data': [random.uniform(1,5)*txn_map[item] for item in sorted(txn_map)]
+                      }
                     ]
-               }
+                }
         response = {'success': True, 'data': data}
     except Exception as e:
         response = {'success': False, 'error': str(e)}
