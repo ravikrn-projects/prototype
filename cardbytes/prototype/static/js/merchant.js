@@ -37,10 +37,57 @@ function generateOffer(){
         );
 }
 
+function loadChart(){
+    $.ajax({url: "http://localhost:8000/cardbytes/get_transaction_data",
+            success: function(result){
+                var data = result['data']
+                console.log(data);
+                $('#chart_container').highcharts({
+                    chart: {
+                        type: 'line'
+                    },
+                    title: {
+                        text: 'Transaction Data'
+                    },
+                    xAxis: {
+                        categories: data.x
+                    },
+                    yAxis: [
+                        {
+                            title: {
+                                text: 'transactions'
+                            }
+                        },
+                        {
+                            title: {
+                                text: 'cashback'
+                            },
+                            opposite: true
+                        }
+                    ],
+                    series: [
+                        {
+                            name: data.y[0].name,
+                            data: data.y[0].data,
+                            yAxis: 0
+                        },
+                        {
+                            name: data.y[1].name,
+                            data: data.y[1].data,
+                            yAxis: 1
+                        }
+                    ]
+                });
+            }
+        }
+    );
+}
+
 function initialize(){
     loadDropDownList(goals, "goal");
     loadDropDownList(tags, "tag");
     loadDropDownList(geography, "geography");
+    loadChart();
 }
 
 $(document).ready(initialize);
