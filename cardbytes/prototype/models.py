@@ -5,7 +5,7 @@ from django.db import models
 
 class Merchant(models.Model):
     name = models.CharField(max_length=200)
-    merchant_id = models.IntegerField(primary_key=True, unique=True, default=0)
+    merchant_id = models.IntegerField(primary_key=True, default=0)
 
 class User(models.Model):
     name = models.CharField(max_length=200, default='****')

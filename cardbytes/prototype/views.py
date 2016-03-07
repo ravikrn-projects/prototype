@@ -95,19 +95,7 @@ def get_message(user_id):
 
 def transact(request):
     params = request.GET
-    user_id = params['user_id']
-    merchant_id = params['merchant_id']
-    amount = float(params['amount'])
-    try:
-        cashback = get_cashback(user_id, merchant_id)
-        update_user(user_id, cashback, amount)
-        update_vendor(cashback, amount)
-        update_bank(cashback, amount)
-        update_status(user_id, merchant_id, cashback)
-        response = {'success': True}
-    except Exception as e:
-        response = {'success': False, 'error': str(e)}
-    res = JsonResponse(response)
+    res = JsonResponse(transact_update(params))
     res["Access-Control-Allow-Origin"] = "*"
     return res
 

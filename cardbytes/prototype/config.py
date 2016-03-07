@@ -5,7 +5,6 @@ bank_commission_clm = 0.05
 tags = [
              {"name": "High Paying", "id": 0},
              {"name": "Low Paying", "id": 1},
-             {"name": "Coffee Lovers", "id": 2}
 ]
 
 geography = [
