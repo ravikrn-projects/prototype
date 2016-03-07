@@ -1,7 +1,15 @@
-.dropdown-button{
+.fill-parent-btn{
     width: 100%;
 }
 
-.selected_item{
+.centered-text{
     margin: 6px auto;
+}
+
+.success{
+    color: #3d5afe;
+}
+
+.failure{
+    color: #ff1744;
 }

@@ -28,7 +28,7 @@ def merchant(request, merchant_id):
 def show_offers(request):
     params = request.GET
     try:
-        offers = Offer.objects.all().values('user_id', 'merchant_id', 'cashback', 'cashback_used')
+        offers = Offer.objects.all().values()
         offer_list = list(offers)
         offer_list_response = []
         for offer in offer_list:
@@ -173,21 +173,29 @@ def initialize_merchants():
         merchant = Merchant(name=merchant_name)
         merchant.save()
         
-def generate_offers(request):
+def generate_offer(request):
+    params = request.GET
+    merchant_id = params['merchant_id']
+    cashback = float(params['cashback'])/100
+    goal_id = params['goal_id']
+    customer_tag_id = params['customer_tag_id']
+    geography_id = params['geography_id']
     try:
-        Offer.objects.all().delete()
-        users = User.objects.all()
-        merchants = Merchant.objects.all()
-        cashbacks = [0.05, 0.1, 0.15, 0.2]
-        for user in users:
-            merchant = random.choice(merchants)
-            cashback = random.choice(cashbacks)
-            offer = Offer(user=user, merchant=merchant, cashback=cashback, cashback_used=False)
-            offer.save()
+        merchant = Merchant.objects.get(id=merchant_id)
+        offer = Offer(merchant=merchant,
+                      cashback=cashback,
+                      cashback_used=False,
+                      goal=goal_id,
+                      customer_tag=customer_tag_id,
+                      geography=geography_id
+                     )
+        offer.save()
         response = {'success': True}
     except Exception as e:
         response = {'success': False, 'error': str(e)}
-    return JsonResponse(response)
+    res = JsonResponse(response)
+    res["Access-Control-Allow-Origin"] = "*"
+    return res
 
 def initialize_vendor():
     vendor = Vendor()
