@@ -19,3 +19,17 @@ goals = [
              {"name": "New customer acquisition", "id": 1},
              {"name": "Blast marketing", "id": 2}
 ]
+
+base_url = "http://localhost:8000/cardbytes/"
+
+urls = {
+        'get_relevance_data': base_url + 'get_relevance_data',
+        'show_offers': base_url + 'show_offers',
+        'get_bank_revenue': base_url + 'get_bank_revenue',
+        'get_vendor_revenue': base_url + 'get_vendor_revenue',
+        'get_transaction_data': base_url + 'get_transaction_data',
+        'transact': base_url + 'transact',
+        'user': base_url + 'user',
+        'get_merchants': base_url + 'get_merchants',
+        'generate_offer': base_url + 'generate_offer'
+}

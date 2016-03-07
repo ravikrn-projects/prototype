@@ -3,6 +3,9 @@
 
 {%block head%}
         <script type="text/javascript"> var user_id = {{user_id}}</script>
+        <script type="text/javascript"> var transact_url = "{{transact_url}}"</script>
+        <script type="text/javascript"> var user_url = "{{user_url}}"</script>
+        <script type="text/javascript"> var get_merchants_url = "{{get_merchants_url}}"</script>
         <script type="text/javascript" src="{% static "js/customer.js" %}"></script>
         <title>Customer</title>
 {%endblock head%}

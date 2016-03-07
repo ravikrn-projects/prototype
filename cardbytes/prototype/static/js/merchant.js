@@ -22,7 +22,7 @@ function generateOffer(){
     else
         $.ajax(
                 {
-                    url: "http://127.0.0.1:8000/cardbytes/generate_offer", 
+                    url: generate_offer_url,
                     data: {
                             merchant_id: merchant_id,
                             cashback: $("#cashback").val(),
@@ -41,7 +41,7 @@ function generateOffer(){
 }
 
 function loadChart(){
-    $.ajax({url: "http://localhost:8000/cardbytes/get_transaction_data",
+    $.ajax({url: get_transaction_data_url,
             data: {
                     merchant_id: merchant_id,
             },

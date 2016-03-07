@@ -3,7 +3,7 @@ var selected_merchant;
 function buy(){
     $.ajax(
             {
-                url: "http://127.0.0.1:8000/cardbytes/transact", 
+                url: transact_url,
                 data: {
                         user_id: user_id,
                         amount: $("#amount").val(),
@@ -19,7 +19,8 @@ function buy(){
 function updateUserData(){
     $.ajax(
             {
-                url: "http://127.0.0.1:8000/cardbytes/user?user_id="+user_id, 
+                url: user_url,
+                data: {user_id: user_id},
                 success: function(result){
                     $("#textarea1").val(result.user.message);
                     $("#acc_balance").html("Account Balance: "+result.user.acc_balance);
@@ -37,7 +38,7 @@ function updateMerchant(merchant, id){
 function updateMerchantData(){
     $.ajax(
             {
-                url: "http://127.0.0.1:8000/cardbytes/get_merchants", 
+                url: get_merchants_url,
                 success: function(result){
                     var list_items = "";
                     for(var i=0;i<result.merchants.length;i++){

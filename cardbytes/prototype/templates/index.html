@@ -2,6 +2,9 @@
 {% load staticfiles %}
 
 {%block head%}
+        <script type="text/javascript"> var get_vendor_revenue_url = "{{get_vendor_revenue_url}}"</script>
+        <script type="text/javascript"> var get_bank_revenue_url = "{{get_bank_revenue_url}}"</script>
+        <script type="text/javascript"> var show_offers_url = "{{show_offers_url}}"</script>
         <script type="text/javascript" src="{% static "js/index.js" %}"></script>
         <title>Prototype</title>
 {%endblock head%}
