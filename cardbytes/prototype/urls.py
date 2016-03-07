@@ -18,4 +18,5 @@ urlpatterns = [
     url(r'^get_relevance_data$', views.get_relevance_data, name='get_relevance_data'),
     url(r'^update_past_transaction$', views.update_past_transaction, name='update_past_transaction'),
     url(r'^get_transaction_data$', views.get_transaction_data, name='get_transaction_data'),
+    url(r'^add_user_data$', views.add_user_data, name='add_user_data'),
 ]
