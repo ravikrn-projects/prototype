@@ -33,6 +33,9 @@ def show_offers(request):
         offer_list_response = []
         for offer in offer_list:
             offer['merchant'] = Merchant.objects.get(id = offer['merchant_id']).name
+            offer['goal'] = goals[offer['goal']]['name'] 
+            offer['customer_tag'] = tags[offer['customer_tag']]['name'] 
+            offer['geography'] = geography[offer['geography']]['name'] 
             offer_list_response.append(offer)
         response = {'success': True, 'offers': offer_list_response}
     except Exception as e:
