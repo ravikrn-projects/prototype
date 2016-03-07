@@ -1,4 +1,6 @@
 import random
+import csv
+import os
 import json
 from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
@@ -13,7 +15,6 @@ def index(request):
 def customer(request, user_id):
     context = {'user_id': user_id}
     return render(request, 'customer.html', context)
-
 
 def backend_analytics(request):
     return render(request, 'backend_analytics.html')
@@ -106,8 +107,45 @@ def transact(request):
     res["Access-Control-Allow-Origin"] = "*"
     return res
 
+def transact_update(params):
+    user_id = params['user_id']
+    merchant_id = params['merchant_id']
+    amount = float(params['amount'])
+    try:
+        cashback = get_cashback(user_id, merchant_id)
+        update_user(user_id, cashback, amount)
+        update_vendor(cashback, amount)
+        update_bank(cashback, amount)
+        update_status(user_id, merchant_id, cashback)
+        response = {'success': True}
+    except Exception as e:
+        response = {'success': False, 'error': str(e)}
+    return response
+
+def update_past_transaction(request):
+    try:
+        BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        with open(os.path.join(BASE_DIR, 'data/transaction.csv'), 'rb') as data_file:
+            reader = csv.DictReader(data_file)
+            for row in reader:
+                user = User(user_id=row['unique_id'])                
+                merchant = Merchant(merchant_id=row['merchant_id'])
+                user.save()
+                merchant.save()
+                params = {
+                    'user_id': row['unique_id'],
+                    'merchant_id': row['merchant_id'],
+                    'amount': row['amount']
+                }    
+                transact_update(params)
+        response = {'success': True}
+    except Exception as e:
+        response = {'success': False, 'error': str(e)}
+    return JsonResponse(response)
+
+
 def update_user(user_id, cashback, amount):
-    user = User.objects.get(id=user_id)
+    user = User.objects.get(user_id=user_id)
     user.acc_balance = user.acc_balance - float(amount) + amount*cashback
     user.cashback_realized = amount * cashback
     user.save()
