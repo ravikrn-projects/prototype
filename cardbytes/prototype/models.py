@@ -23,7 +23,7 @@ class User(models.Model):
     state = models.CharField(max_length=200, blank=True)
 
 class Offer(models.Model):
-    merchant = models.ForeignKey(Merchant, on_delete=models.CASCADE, unique=True)
+    merchant = models.ForeignKey(Merchant, on_delete=models.CASCADE)
     cashback = models.FloatField(default=0)
     goal = models.IntegerField()
     income_tag = models.IntegerField()
