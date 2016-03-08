@@ -1,10 +1,8 @@
-import random
 import csv
 import os
 import json
 import datetime
 import time
-import random
 
 from collections import defaultdict
 from django.shortcuts import render
@@ -114,15 +112,24 @@ def get_message(user_id):
 
 def transact(request):
     params = request.GET
-    data = {
-        'transaction_id': Transaction.objects.latest('transaction_id').transaction_id,
-        'user_id': params['user_id'],
-        'merchant_id': params['merchant_id'],
-        'amount': params['amount'],
-        'timestamp': time.time(),
-        'bank_id': 0
-    }    
-    res = JsonResponse(transact_update(data))
+    try:
+        try:
+            transaction_id = Transaction.objects.latest('transaction_id').transaction_id + 1
+        except Exception:
+            transaction_id = 0
+        data = {
+            'transaction_id': transaction_id,
+            'user_id': params['user_id'],
+            'merchant_id': params['merchant_id'],
+            'amount': params['amount'],
+            'timestamp': time.time(),
+            'bank_id': 0
+        }    
+        transact_update(data)
+        response = {'success': True}
+    except Exception as e:
+        response = {'success': False, 'error': str(e)}
+    res = JsonResponse(response)
     res["Access-Control-Allow-Origin"] = "*"
     return res
 
@@ -133,23 +140,18 @@ def transact_update(params):
     timestamp = datetime.datetime.fromtimestamp(int(params['timestamp']))
     transaction_id = params['transaction_id']
     bank_id = params['bank_id']
-    try:
-        cashback = get_cashback(user_id, merchant_id)
-        update_user(user_id, cashback, amount)
-        update_vendor(cashback, amount)
-        update_bank(cashback, amount)
-        txn = Transaction(transaction_id=transaction_id,
-                          timestamp=timestamp,
-                          bank_id=bank_id,
-                          user=User.objects.get(user_id=user_id),
-                          merchant=Merchant.objects.get(merchant_id=merchant_id),
-                          amount=amount,
-                          cashback=cashback)
-        txn.save()
-        response = {'success': True}
-    except Exception as e:
-        response = {'success': False, 'error': str(e)}
-    return response
+    cashback = get_cashback(user_id, merchant_id)
+    update_user(user_id, cashback, amount)
+    update_vendor(cashback, amount)
+    update_bank(cashback, amount)
+    txn = Transaction(transaction_id=transaction_id,
+                      timestamp=timestamp,
+                      bank_id=bank_id,
+                      user=User.objects.get(user_id=user_id),
+                      merchant=Merchant.objects.get(merchant_id=merchant_id),
+                      amount=amount,
+                      cashback=cashback*amount)
+    txn.save()
 
 def update_past_transaction(request):
     try:
@@ -157,16 +159,6 @@ def update_past_transaction(request):
         with open(os.path.join(BASE_DIR, 'data/transaction.csv'), 'rb') as data_file:
             reader = csv.DictReader(data_file)
             for row in reader:
-                if len(User.objects.filter(user_id=row['unique_id'])) == 0:
-                    user = User(user_id=row['unique_id'])                
-                    user.save()
-                if len(Merchant.objects.filter(merchant_id=row['unique_id'])) == 0:
-                    merchant = Merchant(merchant_id=row['merchant_id'], 
-                                    name=row['merchant_name'],
-                                    category=row['merchant_category'],
-                                    location=row['merchant_location']
-                                    )
-                    merchant.save()
                 params = {
                     'transaction_id': row['transaction_id'],
                     'user_id': row['unique_id'],
@@ -175,37 +167,35 @@ def update_past_transaction(request):
                     'timestamp': row['timestamp'],
                     'bank_id': row['bank_id']
                 }    
-                response = transact_update(params)
-                if response['success'] == False:
-                    raise Exception(response['error'])
-    except Exception as e:
-        response = {'success': False, 'error': str(e)}
-    return JsonResponse(response)
-
-def add_user_data(request):
-    try:
-        BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-        with open(os.path.join(BASE_DIR, 'data/user_data.csv'), 'rb') as data_file:
-            reader = csv.DictReader(data_file)
-            for row in reader:
-                if len(User.objects.filter(user_id=row['unique_id'])) == 0:
-                    user = User(user_id=row['unique_id'])                
-                else:
-                    user = User.objects.get(user_id=row['unique_id']) 
-                user.user_id = row['unique_id']
-                user.name = row['name']
-                user.age = row['age']
-                user.interest_tag = row['interest_tag']
-                user.frequent_buyer = row['frequent']
-                user.customer_tag = row['income_tag']
-                user.city = row['city']
-                user.locality = row['locality']
-                user.state = row['state']
-                user.save()
+                transact_update(params)
         response = {'success': True}
     except Exception as e:
         response = {'success': False, 'error': str(e)}
     return JsonResponse(response)
+
+def add_user_data():
+    BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    with open(os.path.join(BASE_DIR, 'data/user_data.csv'), 'rb') as data_file:
+        reader = csv.DictReader(data_file)
+        for row in reader:
+            user = User(user_id=row['unique_id'],
+                        name=row['name'],
+                        age=row['age'],
+                        frequent_buyer=row['frequent'],
+                        customer_tag=row['income_tag'],
+                        city=row['city'],
+                        locality=row['locality'],
+                        state=row['state']
+                        )
+            user.save()
+
+def add_merchant_data():
+    BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    with open(os.path.join(BASE_DIR, 'data/merchants.csv'), 'rb') as data_file:
+        reader = csv.DictReader(data_file)
+        for row in reader:
+            merchant = Merchant(merchant_id=row['merchant_id'], name = row['merchant_name'])
+            merchant.save()
 
 def add_relevance_data(request):
     try:
@@ -260,6 +250,8 @@ def initialize(request):
     try:
         Vendor(id=0).save()
         Bank(id=0).save()
+        add_merchant_data()
+        add_user_data()
         response = {'success': True}
     except Exception as e:
         response = {'success': False, 'error': str(e)}
