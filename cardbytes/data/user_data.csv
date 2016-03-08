@@ -1,51 +1,51 @@
-name,age,gender,interest,frequent,income,city,locality,state,customer_id,unique_id,income_tag,interest_tag
-***,33,Male ,Foodie,Frequent ,low,Mumbai,Dombivali,Maharashtra,1,10001,0,0
-***,44,Female,Travel,Infrequent,low,Mumbai,Panvel,Maharashtra,2,10002,0,1
-***,22,Male ,Travel,Infrequent,low,Mumbai,Matunga,Maharashtra,3,10003,0,1
-***,25,Female,Travel,Infrequent,low,Mumbai,Santa cruz,Maharashtra,4,10004,0,1
-***,33,Female,Shopaholic,Infrequent,low,Mumbai,Sion,Maharashtra,5,10005,0,3
-***,32,Male ,Foodie,Infrequent,low,Mumbai,Sakinaka,Maharashtra,6,10006,0,0
-***,36,Male ,Travel,Frequent ,low,Mumbai,Kalyan,Maharashtra,7,10007,0,1
-***,28,Male ,Travel,Infrequent,low,Mumbai,Marine lines,Maharashtra,8,10008,0,1
-***,44,Female,Fashion,Frequent ,low,Mumbai,Sakinaka,Maharashtra,9,10009,0,2
-***,29,Female,Travel,Infrequent,low,Mumbai,Kanjurmarg,Maharashtra,10,10010,0,1
-***,21,Female,Travel,Infrequent,low,Mumbai,Dadar,Maharashtra,11,10011,0,1
-***,22,Female,Travel,Infrequent,low,Mumbai,Mulund,Maharashtra,12,10012,0,1
-***,29,Male ,Foodie,Frequent ,low,Mumbai,Ghatkopar,Maharashtra,13,10013,0,0
-***,37,Female,Foodie,Frequent ,low,Mumbai,Ghatkopar,Maharashtra,14,10014,0,0
-***,34,Female,Fashion,Infrequent,low,Mumbai,Kanjurmarg,Maharashtra,15,10015,0,2
-***,32,Male ,Travel,Infrequent,low,Mumbai,Andheri,Maharashtra,16,10016,0,1
-***,32,Female,Shopaholic,Frequent ,low,Mumbai,Mulund,Maharashtra,17,10017,0,3
-***,41,Female,Travel,Frequent ,low,Mumbai,Marine lines,Maharashtra,18,10018,0,1
-***,24,Male ,Shopaholic,Infrequent,low,Mumbai,Sakinaka,Maharashtra,19,10019,0,3
-***,34,Female,Travel,Infrequent,low,Mumbai,Sion,Maharashtra,20,10020,0,1
-***,27,Female,Travel,Infrequent,low,Mumbai,Mulund,Maharashtra,21,10021,0,1
-***,19,Male ,Travel,Infrequent,high,Mumbai,Sakinaka,Maharashtra,22,10022,1,1
-***,21,Male ,Shopaholic,Frequent ,low,Mumbai,Andheri,Maharashtra,23,10023,0,3
-***,29,Female,Travel,Infrequent,high,Mumbai,Sakinaka,Maharashtra,24,10024,1,1
-***,18,Female,Foodie,Infrequent,low,Mumbai,Colaba,Maharashtra,25,10025,0,0
-***,38,Male ,Shopaholic,Infrequent,low,Mumbai,Andheri,Maharashtra,26,10026,0,3
-***,31,Male ,Travel,Infrequent,low,Mumbai,Colaba,Maharashtra,27,10027,0,1
-***,22,Male ,Travel,Frequent ,low,Mumbai,Sakinaka,Maharashtra,28,10028,0,1
-***,18,Female,Shopaholic,Frequent ,low,Mumbai,Dombivali,Maharashtra,29,10029,0,3
-***,42,Female,Foodie,Infrequent,low,Mumbai,Santa cruz,Maharashtra,30,10030,0,0
-***,25,Male ,Shopaholic,Frequent ,high,Mumbai,Mulund,Maharashtra,31,10031,1,3
-***,28,Female,Travel,Frequent ,low,Mumbai,Kanjurmarg,Maharashtra,32,10032,0,1
-***,45,Female,Shopaholic,Infrequent,low,Mumbai,wadala,Maharashtra,33,10033,0,3
-***,42,Female,Travel,Frequent ,low,Mumbai,Ghatkopar,Maharashtra,34,10034,0,1
-***,28,Female,Foodie,Infrequent,low,Mumbai,wadala,Maharashtra,35,10035,0,0
-***,21,Male ,Travel,Infrequent,low,Mumbai,Sion,Maharashtra,36,10036,0,1
-***,45,Female,Travel,Frequent ,low,Mumbai,Santa cruz,Maharashtra,37,10037,0,1
-***,32,Male ,Fashion,Frequent ,high,Mumbai,Santa cruz,Maharashtra,38,10038,1,2
-***,40,Male ,Travel,Infrequent,low,Mumbai,wadala,Maharashtra,39,10039,0,1
-***,40,Male ,Shopaholic,Infrequent,high,Mumbai,Matunga,Maharashtra,40,10040,1,3
-***,32,Female,Foodie,Infrequent,low,Mumbai,Matunga,Maharashtra,41,10041,0,0
-***,18,Male ,Travel,Infrequent,low,Mumbai,Powai,Maharashtra,42,10042,0,1
-***,30,Male ,Fashion,Infrequent,low,Mumbai,Colaba,Maharashtra,43,10043,0,2
-***,40,Male ,Fashion,Infrequent,low,Mumbai,Sion,Maharashtra,44,10044,0,2
-***,34,Female,Shopaholic,Infrequent,high,Mumbai,Dombivali,Maharashtra,45,10045,1,3
-***,45,Male ,Travel,Infrequent,low,Mumbai,Santa cruz,Maharashtra,46,10046,0,1
-***,40,Female,Shopaholic,Infrequent,low,Mumbai,Santa cruz,Maharashtra,47,10047,0,3
-***,41,Female,Travel,Frequent ,high,Mumbai,Andheri,Maharashtra,48,10048,1,1
-***,22,Male ,Foodie,Frequent ,high,Mumbai,Mulund,Maharashtra,49,10049,1,0
-***,24,Male ,Travel,Infrequent,high,Mumbai,Colaba,Maharashtra,50,10050,1,1
+name,age,gender,interest,frequent ,income,city,locality,state,customer_id,unique_id,income_tag,interest_tag,relevance
+***,33,Male ,Foodie,Frequent ,low,Mumbai,Dombivali,Maharashtra,1,10001,0,0,0.8258535832
+***,44,Female,Travel,Infrequent,low,Mumbai,Panvel,Maharashtra,2,10002,0,1,0.9075972015
+***,22,Male ,Travel,Infrequent,low,Mumbai,Matunga,Maharashtra,3,10003,0,1,0.07643296118
+***,25,Female,Travel,Infrequent,low,Mumbai,Santa cruz,Maharashtra,4,10004,0,1,0.6328679413
+***,33,Female,Shopaholic,Infrequent,low,Mumbai,Sion,Maharashtra,5,10005,0,3,0.5819734217
+***,32,Male ,Foodie,Infrequent,low,Mumbai,Sakinaka,Maharashtra,6,10006,0,0,0.5053661282
+***,36,Male ,Travel,Frequent ,low,Mumbai,Kalyan,Maharashtra,7,10007,0,1,0.1954182028
+***,28,Male ,Travel,Infrequent,low,Mumbai,Marine lines,Maharashtra,8,10008,0,1,0.7940328063
+***,44,Female,Fashion,Frequent ,low,Mumbai,Sakinaka,Maharashtra,9,10009,0,2,0.543426418
+***,29,Female,Travel,Infrequent,low,Mumbai,Kanjurmarg,Maharashtra,10,10010,0,1,0.2863186767
+***,21,Female,Travel,Infrequent,low,Mumbai,Dadar,Maharashtra,11,10011,0,1,0.7190496886
+***,22,Female,Travel,Infrequent,low,Mumbai,Mulund,Maharashtra,12,10012,0,1,0.8720187849
+***,29,Male ,Foodie,Frequent ,low,Mumbai,Ghatkopar,Maharashtra,13,10013,0,0,0.01787545858
+***,37,Female,Foodie,Frequent ,low,Mumbai,Ghatkopar,Maharashtra,14,10014,0,0,0.1778188918
+***,34,Female,Fashion,Infrequent,low,Mumbai,Kanjurmarg,Maharashtra,15,10015,0,2,0.06140811981
+***,32,Male ,Travel,Infrequent,low,Mumbai,Andheri,Maharashtra,16,10016,0,1,0.1217351894
+***,32,Female,Shopaholic,Frequent ,low,Mumbai,Mulund,Maharashtra,17,10017,0,3,0.6927177498
+***,41,Female,Travel,Frequent ,low,Mumbai,Marine lines,Maharashtra,18,10018,0,1,0.4722309189
+***,24,Male ,Shopaholic,Infrequent,low,Mumbai,Sakinaka,Maharashtra,19,10019,0,3,0.8051272135
+***,34,Female,Travel,Infrequent,low,Mumbai,Sion,Maharashtra,20,10020,0,1,0.2562621925
+***,27,Female,Travel,Infrequent,low,Mumbai,Mulund,Maharashtra,21,10021,0,1,0.7570573338
+***,19,Male ,Travel,Infrequent,high,Mumbai,Sakinaka,Maharashtra,22,10022,1,1,0.9314739686
+***,21,Male ,Shopaholic,Frequent ,low,Mumbai,Andheri,Maharashtra,23,10023,0,3,0.3966380776
+***,29,Female,Travel,Infrequent,high,Mumbai,Sakinaka,Maharashtra,24,10024,1,1,0.3642665655
+***,18,Female,Foodie,Infrequent,low,Mumbai,Colaba,Maharashtra,25,10025,0,0,0.3741267212
+***,38,Male ,Shopaholic,Infrequent,low,Mumbai,Andheri,Maharashtra,26,10026,0,3,0.831279794
+***,31,Male ,Travel,Infrequent,low,Mumbai,Colaba,Maharashtra,27,10027,0,1,0.03448208356
+***,22,Male ,Travel,Frequent ,low,Mumbai,Sakinaka,Maharashtra,28,10028,0,1,0.5222853889
+***,18,Female,Shopaholic,Frequent ,low,Mumbai,Dombivali,Maharashtra,29,10029,0,3,0.003287205195
+***,42,Female,Foodie,Infrequent,low,Mumbai,Santa cruz,Maharashtra,30,10030,0,0,0.4436282598
+***,25,Male ,Shopaholic,Frequent ,high,Mumbai,Mulund,Maharashtra,31,10031,1,3,0.6364658511
+***,28,Female,Travel,Frequent ,low,Mumbai,Kanjurmarg,Maharashtra,32,10032,0,1,0.1984793947
+***,45,Female,Shopaholic,Infrequent,low,Mumbai,wadala,Maharashtra,33,10033,0,3,0.7201249922
+***,42,Female,Travel,Frequent ,low,Mumbai,Ghatkopar,Maharashtra,34,10034,0,1,0.8770579462
+***,28,Female,Foodie,Infrequent,low,Mumbai,wadala,Maharashtra,35,10035,0,0,0.1157665874
+***,21,Male ,Travel,Infrequent,low,Mumbai,Sion,Maharashtra,36,10036,0,1,0.8722891432
+***,45,Female,Travel,Frequent ,low,Mumbai,Santa cruz,Maharashtra,37,10037,0,1,0.2139982068
+***,32,Male ,Fashion,Frequent ,high,Mumbai,Santa cruz,Maharashtra,38,10038,1,2,0.4621332286
+***,40,Male ,Travel,Infrequent,low,Mumbai,wadala,Maharashtra,39,10039,0,1,0.5338030323
+***,40,Male ,Shopaholic,Infrequent,high,Mumbai,Matunga,Maharashtra,40,10040,1,3,0.02616783275
+***,32,Female,Foodie,Infrequent,low,Mumbai,Matunga,Maharashtra,41,10041,0,0,0.3269766725
+***,18,Male ,Travel,Infrequent,low,Mumbai,Powai,Maharashtra,42,10042,0,1,0.2367893368
+***,30,Male ,Fashion,Infrequent,low,Mumbai,Colaba,Maharashtra,43,10043,0,2,0.1239476924
+***,40,Male ,Fashion,Infrequent,low,Mumbai,Sion,Maharashtra,44,10044,0,2,0.1382101973
+***,34,Female,Shopaholic,Infrequent,high,Mumbai,Dombivali,Maharashtra,45,10045,1,3,0.09730124481
+***,45,Male ,Travel,Infrequent,low,Mumbai,Santa cruz,Maharashtra,46,10046,0,1,0.1714767531
+***,40,Female,Shopaholic,Infrequent,low,Mumbai,Santa cruz,Maharashtra,47,10047,0,3,0.5016415457
+***,41,Female,Travel,Frequent ,high,Mumbai,Andheri,Maharashtra,48,10048,1,1,0.2615682653
+***,22,Male ,Foodie,Frequent ,high,Mumbai,Mulund,Maharashtra,49,10049,1,0,0.428814672
+***,24,Male ,Travel,Infrequent,high,Mumbai,Colaba,Maharashtra,50,10050,1,1,0.3665392184

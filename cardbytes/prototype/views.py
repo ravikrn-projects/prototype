@@ -207,6 +207,23 @@ def add_user_data(request):
         response = {'success': False, 'error': str(e)}
     return JsonResponse(response)
 
+def add_relevance_data(request):
+    try:
+        BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        with open(os.path.join(BASE_DIR, 'data/user_data.csv'), 'rb') as data_file:
+            reader = csv.DictReader(data_file)
+            for row in reader:
+                if len(Relevance.objects.filter(user_id=row['unique_id'])) == 0:
+                    rel = Relevance(user_id=row['unique_id'])                
+                else:
+                    rel = Relevance.objects.get(user_id=row['unique_id']) 
+                rel.index = row['relevance']
+                rel.save()
+        response = {'success': True}
+    except Exception as e:
+        response = {'success': False, 'error': str(e)}
+    return JsonResponse(response)
+
 def update_user(user_id, cashback, amount):
     user = User.objects.get(user_id=user_id)
     user.acc_balance = user.acc_balance - float(amount) + amount*cashback
@@ -297,11 +314,11 @@ def initialize_bank():
 
 
 def get_relevance_data(request):
-    data = {'unique_id': [], 'index': []}
+    data = {'user_id': [], 'index': []}
     try:
         relevance_data = Relevance.objects.all()
         for user in relevance_data:
-            data['unique_id'].append(user.unique_id)
+            data['user_id'].append(user.user_id)
             data['index'].append(user.index)
         response = {'success': True, 'data': data}
     except Exception as e:
