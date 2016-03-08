@@ -45,5 +45,5 @@ class Transaction(models.Model):
     amount = models.FloatField()
 
 class Relevance(models.Model):
-    unique_id = models.IntegerField(default=0)
+    user_id = models.IntegerField(default=0, unique=True)
     index = models.FloatField(default=0)
