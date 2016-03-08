@@ -30,9 +30,9 @@ def customer(request, user_id):
     return render(request, 'customer.html', context)
 
 def backend_analytics(request):
-    context = {'get_transaction_data_url': urls['get_transaction_data']
+    context = {'get_relevance_data_url': urls['get_relevance_data']
             }
-    return render(request, 'backend_analytics.html')
+    return render(request, 'backend_analytics.html', context)
 
 def merchant(request, merchant_id):
     context = {'merchant_id': merchant_id,
