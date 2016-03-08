@@ -10,7 +10,7 @@ function create_table(){
                                       "<td>"+offers[i]['cashback']*100 +"</td>"+
                                       "<td>"+offers[i]['goal']         +"</td>"+
                                       "<td>"+offers[i]['customer_tag'] +"</td>"+
-                                      "<td>"+offers[i]['geography']    +"</td>"+
+                                      "<td>"+offers[i]['income_tag']    +"</td>"+
                                   "</tr>";
                 }
                 var html_code = "<table class='centered responsive-table highlight'>"+
@@ -20,7 +20,7 @@ function create_table(){
                                             "<th data-field='cashback'>Cashback (%)</th>"+
                                             "<th data-field='goal'>Goal</th>"+
                                             "<th data-field='customer_tag'>Customer Tag</th>"+
-                                            "<th data-field='geography'>Geography</th>"+
+                                            "<th data-field='income_tag'>Income Tag</th>"+
                                         "</tr>"+
                                     "</thead>"+
                                     "<tbody>"+

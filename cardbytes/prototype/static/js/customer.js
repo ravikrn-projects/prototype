@@ -42,12 +42,12 @@ function updateMerchantData(){
                     var list_items = "";
                     for(var i=0;i<result.merchants.length;i++){
                         var merchant = result.merchants[i];
-                        var onclick = "onClick=\"updateMerchant(" + "'"+ merchant.name + "'"+ ", "+ merchant.id    + ")\"";
+                        var onclick = "onClick=\"updateMerchant(" + "'"+ merchant.name + "'"+ ", "+ merchant.merchant_id    + ")\"";
                         list_items += "<li><a href='#!' "+onclick+">"+ merchant.name +"</a></li>";
                     }
                     $("#dropdown1").html(list_items);
                     $("#merchant").html(result.merchants[0].name);
-                    selected_merchant = result.merchants[0].id;
+                    selected_merchant = result.merchants[0].merchant_id;
                 }
             }
         );
