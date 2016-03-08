@@ -143,7 +143,8 @@ def transact_update(params):
                           bank_id=bank_id,
                           user=User.objects.get(user_id=user_id),
                           merchant=Merchant.objects.get(merchant_id=merchant_id),
-                          amount=amount)
+                          amount=amount,
+                          cashback=cashback)
         txn.save()
         response = {'success': True}
     except Exception as e:
@@ -302,21 +303,16 @@ def get_relevance_data(request):
 def get_transaction_data(request):
     merchant_id = request.GET['merchant_id']
     try:
-        data = Transaction.objects.filter(merchant_id=merchant_id).values()
-        data = list(data)
-        txn_map = defaultdict(int)
-        for item in data:
-            txn_map[item['timestamp'].date()] += 1
-        random.seed(100)
+        dates, sales, cashback = transaction_data(merchant_id)
         data = {
-                'x': sorted(txn_map.keys()),
+                'x': dates,
                 'y': [{
-                        'name': 'transactions',
-                        'data': [txn_map[item] for item in sorted(txn_map)]
+                        'name': 'sales',
+                        'data':  sales
                       },
                       {
                         'name': 'cashback',
-                        'data': [random.uniform(1,5)*txn_map[item] for item in sorted(txn_map)]
+                        'data':  cashback
                       }
                     ]
                 }
@@ -324,3 +320,18 @@ def get_transaction_data(request):
     except Exception as e:
         response = {'success': False, 'error': str(e)}
     return JsonResponse(response)
+
+def transaction_data(merchant_id):
+    txn_rows = Transaction.objects.filter(merchant_id=merchant_id).values()
+    txn_data = defaultdict(lambda: defaultdict(int))
+    for txn in txn_rows:
+        date = txn['timestamp'].date()
+        txn_data[date]['sales'] += txn['amount']
+        txn_data[date]['cashback'] += txn['cashback']
+    dates = sorted(txn_data)
+    sales = []
+    cashback = []
+    for date in dates:
+        sales.append(txn_data[date]['sales'])
+        cashback.append(txn_data[date]['cashback'])
+    return dates, sales, cashback
