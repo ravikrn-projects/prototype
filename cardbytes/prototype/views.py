@@ -30,7 +30,7 @@ def customer(request, user_id):
     return render(request, 'customer.html', context)
 
 def backend_analytics(request):
-    context = {'get_transaction_data_url': url['get_transaction_data']
+    context = {'get_transaction_data_url': urls['get_transaction_data']
             }
     return render(request, 'backend_analytics.html')
 
