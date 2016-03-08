@@ -138,7 +138,6 @@ def transact_update(params):
         update_user(user_id, cashback, amount)
         update_vendor(cashback, amount)
         update_bank(cashback, amount)
-        # update_status(user_id, merchant_id, cashback)
         txn = Transaction(transaction_id=transaction_id,
                           timestamp=timestamp,
                           bank_id=bank_id,
@@ -230,12 +229,6 @@ def update_user(user_id, cashback, amount):
     user.cashback_realized = amount * cashback
     user.save()
 
-def update_status(user_id, merchant_id, cashback):
-    if cashback>0:
-        offer = Offer.objects.get(user_id=user_id, merchant_id=merchant_id)
-        offer.cashback_used = True
-        offer.save()
-
 def update_vendor(cashback, amount):
     vendor_commission_amt = vendor_commission*cashback
     vendor = Vendor.objects.all()[0]
@@ -264,18 +257,8 @@ def get_cashback(user_id, merchant_id):
 
 def initialize(request):
     try:
-        #delete previous data
-        # User.objects.all().delete()
-        # Merchant.objects.all().delete()
-        # Offer.objects.all().delete()
-        Vendor.objects.all().delete()
-        Bank.objects.all().delete()
-        # insert new data
-        # initialize_users()
-        # initialize_merchants()
-        initialize_vendor()
-        initialize_bank()
-
+        Vendor(id=0).save()
+        Bank(id=0).save()
         response = {'success': True}
     except Exception as e:
         response = {'success': False, 'error': str(e)}
@@ -303,15 +286,6 @@ def generate_offer(request):
     res = JsonResponse(response)
     res["Access-Control-Allow-Origin"] = "*"
     return res
-
-def initialize_vendor():
-    vendor = Vendor()
-    vendor.save()
-
-def initialize_bank():
-    bank = Bank()
-    bank.save()
-
 
 def get_relevance_data(request):
     data = {'user_id': [], 'index': []}
