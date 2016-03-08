@@ -329,9 +329,6 @@ def transaction_data(merchant_id):
         txn_data[date]['sales'] += txn['amount']
         txn_data[date]['cashback'] += txn['cashback']
     dates = sorted(txn_data)
-    sales = []
-    cashback = []
-    for date in dates:
-        sales.append(txn_data[date]['sales'])
-        cashback.append(txn_data[date]['cashback'])
+    sales = [txn_data[date]['sales'] for date in dates]
+    cashback = [txn_data[date]['cashback'] for date in dates]
     return dates, sales, cashback
