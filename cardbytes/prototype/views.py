@@ -138,13 +138,13 @@ def transact_update(params):
         update_user(user_id, cashback, amount)
         update_vendor(cashback, amount)
         update_bank(cashback, amount)
-        # update_status(user_id, merchant_id, cashback)
         txn = Transaction(transaction_id=transaction_id,
                           timestamp=timestamp,
                           bank_id=bank_id,
                           user=User.objects.get(user_id=user_id),
                           merchant=Merchant.objects.get(merchant_id=merchant_id),
-                          amount=amount)
+                          amount=amount,
+                          cashback=cashback)
         txn.save()
         response = {'success': True}
     except Exception as e:
@@ -230,12 +230,6 @@ def update_user(user_id, cashback, amount):
     user.cashback_realized = amount * cashback
     user.save()
 
-def update_status(user_id, merchant_id, cashback):
-    if cashback>0:
-        offer = Offer.objects.get(user_id=user_id, merchant_id=merchant_id)
-        offer.cashback_used = True
-        offer.save()
-
 def update_vendor(cashback, amount):
     vendor_commission_amt = vendor_commission*cashback
     vendor = Vendor.objects.all()[0]
@@ -264,18 +258,8 @@ def get_cashback(user_id, merchant_id):
 
 def initialize(request):
     try:
-        #delete previous data
-        # User.objects.all().delete()
-        # Merchant.objects.all().delete()
-        # Offer.objects.all().delete()
-        Vendor.objects.all().delete()
-        Bank.objects.all().delete()
-        # insert new data
-        # initialize_users()
-        # initialize_merchants()
-        initialize_vendor()
-        initialize_bank()
-
+        Vendor(id=0).save()
+        Bank(id=0).save()
         response = {'success': True}
     except Exception as e:
         response = {'success': False, 'error': str(e)}
@@ -304,15 +288,6 @@ def generate_offer(request):
     res["Access-Control-Allow-Origin"] = "*"
     return res
 
-def initialize_vendor():
-    vendor = Vendor()
-    vendor.save()
-
-def initialize_bank():
-    bank = Bank()
-    bank.save()
-
-
 def get_relevance_data(request):
     data = {'user_id': [], 'index': []}
     try:
@@ -328,21 +303,16 @@ def get_relevance_data(request):
 def get_transaction_data(request):
     merchant_id = request.GET['merchant_id']
     try:
-        data = Transaction.objects.filter(merchant_id=merchant_id).values()
-        data = list(data)
-        txn_map = defaultdict(int)
-        for item in data:
-            txn_map[item['timestamp'].date()] += 1
-        random.seed(100)
+        dates, sales, cashback = transaction_data(merchant_id)
         data = {
-                'x': sorted(txn_map.keys()),
+                'x': dates,
                 'y': [{
-                        'name': 'transactions',
-                        'data': [txn_map[item] for item in sorted(txn_map)]
+                        'name': 'sales',
+                        'data':  sales
                       },
                       {
                         'name': 'cashback',
-                        'data': [random.uniform(1,5)*txn_map[item] for item in sorted(txn_map)]
+                        'data':  cashback
                       }
                     ]
                 }
@@ -350,3 +320,15 @@ def get_transaction_data(request):
     except Exception as e:
         response = {'success': False, 'error': str(e)}
     return JsonResponse(response)
+
+def transaction_data(merchant_id):
+    txn_rows = Transaction.objects.filter(merchant_id=merchant_id).values()
+    txn_data = defaultdict(lambda: defaultdict(int))
+    for txn in txn_rows:
+        date = txn['timestamp'].date()
+        txn_data[date]['sales'] += txn['amount']
+        txn_data[date]['cashback'] += txn['cashback']
+    dates = sorted(txn_data)
+    sales = [txn_data[date]['sales'] for date in dates]
+    cashback = [txn_data[date]['cashback'] for date in dates]
+    return dates, sales, cashback
