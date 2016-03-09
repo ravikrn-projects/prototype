@@ -286,15 +286,15 @@ def generate_offer(request):
     merchant_id = params['merchant_id']
     cashback = float(params['cashback'])/100
     goal_id = params['goal_id']
-    income_id = params['income_tag_id']
-    customer_tag_id = params['customer_tag_id']
+    # income_id = params['income_tag_id']
+    # customer_tag_id = params['customer_tag_id']
     try:
         merchant = Merchant.objects.get(merchant_id=merchant_id)
         offer = Offer(merchant=merchant,
                       cashback=cashback,
-                      goal=goal_id,
-                      income_tag=income_id,
-                      customer_tag=customer_tag_id
+                      goal=goal_id
+                      # income_tag=income_id,
+                      # customer_tag=customer_tag_id
                      )
         offer.save()
         response = {'success': True}

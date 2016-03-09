@@ -27,8 +27,8 @@ function generateOffer(){
                             merchant_id: merchant_id,
                             cashback: $("#cashback").val(),
                             goal_id: selected_goal,
-                            income_tag_id: selected_income_tag,
-                            customer_tag_id: selected_customer_tag,
+                            // income_tag_id: selected_income_tag,
+                            // customer_tag_id: selected_customer_tag,
                     },
                     success: function(result){
                         if(result.success == true)
@@ -90,8 +90,8 @@ function loadChart(){
 
 function initialize(){
     loadDropDownList(goals, "goal");
-    loadDropDownList(income_tag, "income_tag");
-    loadDropDownList(customer_tag, "customer_tag");
+    // loadDropDownList(income_tag, "income_tag");
+    // loadDropDownList(customer_tag, "customer_tag");
     loadChart();
 }
 
