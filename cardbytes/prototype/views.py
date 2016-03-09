@@ -103,7 +103,8 @@ def get_message(user_id):
         user = User.objects.get(user_id=user_id)
         # income_tag = user.income_tag
         # customer_tag = user.customer_tag
-        offer = Offer.objects.all()[0]    
+        all_offer = Offer.objects.all()   
+        offer = all_offer[len(all_offer)-1]
         merchant = Merchant.objects.get(merchant_id=offer.merchant_id)
         message = 'Get ' + str(offer.cashback * 100) + '% cashback on transaction at ' + merchant.name
     except Exception:
@@ -238,10 +239,10 @@ def get_cashback(user_id, merchant_id):
     cashback = 0
     try:
         user = User.objects.get(user_id=user_id)
-        # income_tag = user.income_tag
-        # customer_tag = user.customer_tag
-        offer = Offer.objects.filter(merchant_id=merchant_id)[0]    
-        cashback = offer.cashback
+        all_offer = Offer.objects.all()
+        offer = all_offer[len(all_offer)-1]
+        if int(merchant_id) == int(offer.merchant_id):
+            cashback = offer.cashback
     except Exception as e:
         pass
     return cashback
