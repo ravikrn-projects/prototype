@@ -101,9 +101,9 @@ def user(request):
 def get_message(user_id):
     try:
         user = User.objects.get(user_id=user_id)
-        income_tag = user.income_tag
-        customer_tag = user.customer_tag
-        offer = Offer.objects.filter(customer_tag=customer_tag, income_tag=income_tag)[0]    
+        # income_tag = user.income_tag
+        # customer_tag = user.customer_tag
+        offer = Offer.objects.all()[0]    
         merchant = Merchant.objects.get(merchant_id=offer.merchant_id)
         message = 'Get ' + str(offer.cashback * 100) + '% cashback on transaction at ' + merchant.name
     except Exception:
