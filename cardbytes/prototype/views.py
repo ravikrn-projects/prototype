@@ -34,8 +34,8 @@ def backend_analytics(request):
 
 def merchant(request, merchant_id):
     context = {'merchant_id': merchant_id,
-               'income_tag': json.dumps(income_tag),
-               'customer_tag': json.dumps(customer_tag),
+               # 'income_tag': json.dumps(income_tag),
+               # 'customer_tag': json.dumps(customer_tag),
                'goals': json.dumps(goals),
                'get_transaction_data_url': urls['get_transaction_data'],
                'generate_offer_url': urls['generate_offer']
@@ -51,8 +51,8 @@ def show_offers(request):
         for offer in offer_list:
             offer['merchant'] = Merchant.objects.get(merchant_id = offer['merchant_id']).name
             offer['goal'] = goals[offer['goal']]['name'] 
-            offer['income_tag'] = income_tag[offer['income_tag']]['name'] 
-            offer['customer_tag'] = customer_tag[offer['customer_tag']]['name'] 
+            # offer['income_tag'] = income_tag[offer['income_tag']]['name'] 
+            # offer['customer_tag'] = customer_tag[offer['customer_tag']]['name'] 
             offer_list_response.append(offer)
         response = {'success': True, 'offers': offer_list_response}
     except Exception as e:
@@ -182,7 +182,7 @@ def add_user_data():
                         name=row['name'],
                         age=row['age'],
                         frequent_buyer=row['frequent'],
-                        customer_tag=row['income_tag'],
+                        # customer_tag=row['income_tag'],
                         city=row['city'],
                         locality=row['locality'],
                         state=row['state']
@@ -238,9 +238,9 @@ def get_cashback(user_id, merchant_id):
     cashback = 0
     try:
         user = User.objects.get(user_id=user_id)
-        income_tag = user.income_tag
-        customer_tag = user.customer_tag
-        offer = Offer.objects.filter(customer_tag=customer_tag, income_tag=income_tag, merchant_id=merchant_id)[0]    
+        # income_tag = user.income_tag
+        # customer_tag = user.customer_tag
+        offer = Offer.objects.filter(merchant_id=merchant_id)[0]    
         cashback = offer.cashback
     except Exception as e:
         pass

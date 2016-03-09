@@ -16,8 +16,7 @@ customer_tag = [
 
 goals = [
              {"name": "Loyalty program", "id": 0},
-             {"name": "New customer acquisition", "id": 1},
-             {"name": "Blast marketing", "id": 2}
+             {"name": "New customer acquisition", "id": 1}
 ]
 
 base_url = "http://localhost:8000/cardbytes/"
