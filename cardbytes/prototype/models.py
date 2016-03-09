@@ -41,6 +41,7 @@ class Transaction(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     merchant = models.ForeignKey(Merchant, on_delete=models.CASCADE)
     amount = models.FloatField()
+    cashback = models.FloatField(default=0)
 
 class Relevance(models.Model):
     user_id = models.IntegerField(default=0, unique=True)

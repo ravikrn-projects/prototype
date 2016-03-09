@@ -1,4 +1,5 @@
-name,age,gender,interest,frequent ,income,city,locality,state,customer_id,unique_id,income_tag,interest_tag,relevance
+name,age,gender,interest,frequent,income,city,locality,state,customer_id,unique_id,income_tag,interest_tag,relevance
+***,33,Male ,Foodie,Frequent ,low,Mumbai,Dombivali,Maharashtra,1,10000,0,0,0.8258535832
 ***,33,Male ,Foodie,Frequent ,low,Mumbai,Dombivali,Maharashtra,1,10001,0,0,0.8258535832
 ***,44,Female,Travel,Infrequent,low,Mumbai,Panvel,Maharashtra,2,10002,0,1,0.9075972015
 ***,22,Male ,Travel,Infrequent,low,Mumbai,Matunga,Maharashtra,3,10003,0,1,0.07643296118

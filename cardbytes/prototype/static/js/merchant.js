@@ -60,12 +60,12 @@ function loadChart(){
                     yAxis: [
                         {
                             title: {
-                                text: 'transactions'
+                                text: 'Sales'
                             }
                         },
                         {
                             title: {
-                                text: 'cashback'
+                                text: 'Cashback'
                             },
                             opposite: true
                         }
