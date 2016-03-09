@@ -6,8 +6,6 @@
 
         <script type="text/javascript"> var merchant_id = {{merchant_id}};</script>
         <script type="text/javascript"> var goals = {{goals|safe}};</script>
-        <script type="text/javascript"> var income_tag = {{income_tag|safe}};</script>
-        <script type="text/javascript"> var customer_tag = {{customer_tag|safe}}; </script>
         <script type="text/javascript"> var get_transaction_data_url = "{{get_transaction_data_url}}"; </script>
         <script type="text/javascript"> var generate_offer_url = "{{generate_offer_url}}"; </script>
 
@@ -32,7 +30,7 @@
                     <div id="goal" class="centered-text"></div>
                 </div>
                 <div class="col s12"><br/></div>
-                <div class="col s3">
+                <!-- <div class="col s3">
                     <a class='dropdown-button btn fill-parent-btn' href='#' data-activates='income_tag_dropdown' > Income Type </a>
                     <ul id='income_tag_dropdown' class='dropdown-content'></ul>
                 </div>
@@ -46,7 +44,7 @@
                 </div>
                 <div class="col s9">
                     <div id="customer_tag" class="centered-text"></div>
-                </div>
+                </div> -->
                 <div class="col s12"><br/></div>
                 <div class="col s3">
                     <input placeholder="% Cashback" id="cashback" type="number" class="validate">

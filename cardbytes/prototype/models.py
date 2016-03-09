@@ -15,9 +15,9 @@ class User(models.Model):
     acc_balance = models.FloatField(default=10000)
     cashback_realized = models.FloatField(default=0)
     age = models.IntegerField(default=18)
-    customer_tag = models.IntegerField(default=0)
+    # customer_tag = models.IntegerField(default=0)
     frequent_buyer = models.CharField(max_length=200, default="Frequent")
-    income_tag = models.IntegerField(default=0, blank=True)
+    # income_tag = models.IntegerField(default=0, blank=True)
     city = models.CharField(max_length=200, blank=True)
     locality = models.CharField(max_length=200, blank=True)
     state = models.CharField(max_length=200, blank=True)
@@ -26,8 +26,6 @@ class Offer(models.Model):
     merchant = models.ForeignKey(Merchant, on_delete=models.CASCADE)
     cashback = models.FloatField(default=0)
     goal = models.IntegerField()
-    income_tag = models.IntegerField()
-    customer_tag = models.IntegerField()
 
 class Vendor(models.Model):
     revenue = models.FloatField(default=0)
