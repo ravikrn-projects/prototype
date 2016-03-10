@@ -103,10 +103,11 @@ def get_message(user_id):
         user = User.objects.get(user_id=user_id)
         # income_tag = user.income_tag
         # customer_tag = user.customer_tag
-        all_offer = Offer.objects.all()   
-        offer = all_offer[len(all_offer)-1]
-        merchant = Merchant.objects.get(merchant_id=offer.merchant_id)
-        message = 'Get ' + str(offer.cashback * 100) + '% cashback on transaction at ' + merchant.name
+        # all_offer = Offer.objects.all()   
+        # offer = all_offer[len(all_offer)-1]
+        # merchant = Merchant.objects.get(merchant_id=offer.merchant_id)
+        # message = 'Get ' + str(offer.cashback * 100) + '% cashback on transaction at ' + merchant.name
+        message = user.message
     except Exception:
         message = ''    
     return message
@@ -153,6 +154,7 @@ def transact_update(params):
                       amount=amount,
                       cashback=cashback*amount)
     txn.save()
+    update_message(user_id, cashback*amount)
 
 def update_past_transaction(request):
     try:
@@ -274,6 +276,7 @@ def generate_offer(request):
                       # customer_tag=customer_tag_id
                      )
         offer.save()
+        save_messages(merchant_id, cashback)
         response = {'success': True}
     except Exception as e:
         response = {'success': False, 'error': str(e)}
@@ -281,6 +284,15 @@ def generate_offer(request):
     res["Access-Control-Allow-Origin"] = "*"
     return res
 
+def save_messages(merchant_id, cashback):
+    merchant = Merchant.objects.get(merchant_id=merchant_id)
+    message = 'Get ' + str(cashback * 100) + '% cashback on transaction at ' + merchant.name + '.'
+    User.objects.all().update(message=message)
+
+def update_message(user_id, cashback):
+    message = 'Congrats you will get get your cashback of Rs. ' + str(cashback) + ' within 24 hrs.'
+    User.objects.filter(user_id=user_id).update(message=message)
+        
 def get_relevance_data(request):
     data = {'user_id': [], 'index': []}
     try:

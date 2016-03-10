@@ -21,6 +21,7 @@ class User(models.Model):
     city = models.CharField(max_length=200, blank=True)
     locality = models.CharField(max_length=200, blank=True)
     state = models.CharField(max_length=200, blank=True)
+    message = models.CharField(max_length=300, default="")
 
 class Offer(models.Model):
     merchant = models.ForeignKey(Merchant, on_delete=models.CASCADE)
